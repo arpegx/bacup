@@ -1,0 +1,17 @@
+{
+    "name": "arpegx/bacup",
+    "require": {
+        "laravel/prompts": "^0.3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Arpegx\\Bacup\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "arpegx",
+            "email": "arpegx@posteo.de"
+        }
+    ]
+}
