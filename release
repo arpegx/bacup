@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+try {
+  // build directory
+  is_dir("build") ?: mkdir("build", 0700);
+
+  // Create a new Phar object
+  $phar = new Phar('build/bacup.phar');
+
+  // Start
+  $phar->startBuffering();
+
+  // Set the default stub file
+  $defaultStub = $phar->createDefaultStub('bacup');
+
+  // Add files to the archive
+  $phar->addFile('bacup');
+
+  foreach (['app', 'vendor'] as $dir) {
+    # regex : negative lookhead avoids matching .git
+    $phar->buildFromDirectory(__DIR__, '/^((?!\.git).)*' . $dir . '/');
+  }
+
+  # Set shebang
+  $phar->setStub("#!/usr/bin/env php \n" . $defaultStub);
+
+  // Save the archive
+  $phar->stopBuffering();
+
+} catch (Exception $e) {
+  echo 'Error: ' . $e->getMessage();
+}
