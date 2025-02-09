@@ -3,7 +3,7 @@
 
 try {
   // build directory
-  is_dir("build") ?: mkdir("build", 0700);
+  mkdir("build", 0700);
 
   // Create a new Phar object
   $phar = new Phar('build/bacup.phar');

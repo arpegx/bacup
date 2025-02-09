@@ -1,11 +1,20 @@
+image = arpegx/bacup:latest
+phar = build/bacup.phar
+extract_dir = build/extract
+
 build:
-	podman build -t arpegx/bacup:latest .
+	podman build -t ${image} .
 
-run:
-	podman run -it localhost/arpegx/bacup
+run: build
+	podman run --rm -it ${image}
 
-release:
-	./release && chmod u+x ./build/bacup.phar
+release: clean
+	./release && chmod u+x ${phar}
+
+extract: release
+	mkdir ${extract_dir} && php -r '(new Phar("${phar}"))->extractTo("${extract_dir}");'
 
 clean:
 	rm -rf ./build 2>&1 > /dev/null
+
+.PHONY: build run release extract clean
