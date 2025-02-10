@@ -14,7 +14,10 @@ release: clean
 extract: release
 	mkdir ${extract_dir} && php -r '(new Phar("${phar}"))->extractTo("${extract_dir}");'
 
+test:
+	./vendor/bin/pest
+
 clean:
 	rm -rf ./build 2>&1 > /dev/null
 
-.PHONY: build run release extract clean
+.PHONY: build run release extract clean test
