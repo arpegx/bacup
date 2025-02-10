@@ -1,6 +1,17 @@
 #!/usr/bin/env php
 <?php declare(strict_types=1);
 
+// declare filesystem structure to be included
+$includes = [
+  "file" => [
+    "bacup",
+  ],
+  "directory" => [
+    "app",
+    "vendor",
+  ]
+];
+
 try {
   // build directory
   mkdir("build", 0700);
@@ -15,11 +26,12 @@ try {
   $defaultStub = $phar->createDefaultStub('bacup');
 
   // Add files to the archive
-  $phar->addFile('bacup');
+  foreach ($includes["file"] as $file) {
+    $phar->addFile($file);
+  }
 
-  foreach (['app', 'vendor'] as $dir) {
-    # regex : negative lookhead avoids matching .git
-    $phar->buildFromDirectory(__DIR__, '/^((?!\.git).)*' . $dir . '/');
+  foreach ($includes["directory"] as $directory) {
+    $phar->buildFromIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), __DIR__);
   }
 
   # Set shebang
