@@ -3,6 +3,6 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Arpegx\Bacup\Command\Track;
+use Arpegx\Bacup\Command\Init;
 
-Track::handle();
+Init::handle();
