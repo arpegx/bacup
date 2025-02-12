@@ -4,5 +4,15 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Arpegx\Bacup\Command\Init;
+use Arpegx\Bacup\Command\Track;
 
-Init::handle();
+return match ($argv[1]) {
+    'init' => Init::handle($argv),
+    'track' => Track::handle($argv),
+    default => help()
+};
+
+function help()
+{
+    print "Help Message";
+}
