@@ -6,6 +6,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
 
+if (count($argv) <= 1) {
+    help();
+    return;
+}
+
 return match ($argv[1]) {
     'init' => Init::handle($argv),
     'track' => Track::handle($argv),
