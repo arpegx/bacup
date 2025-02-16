@@ -11,7 +11,7 @@ class Init
         //repeated call
         if (Configuration::getInstance()->exists()) {
             print "Configuration exists already\n";
-            return 0;
+            exit(1);
         }
 
         try {

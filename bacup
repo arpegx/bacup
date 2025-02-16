@@ -9,13 +9,13 @@ use Arpgex\Bacup\Model\Configuration;
 
 if (count($argv) <= 1) {
     help();
-    return;
+    exit(0);
 }
 
 if (!($argv[1] === 'init') && !Configuration::getInstance()->exists()) {
     print "Configuration doesnt exists";
     help();
-    return;
+    exit(1);
 }
 
 return match ($argv[1]) {
