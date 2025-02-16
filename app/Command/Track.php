@@ -4,7 +4,7 @@ namespace Arpegx\Bacup\Command;
 
 class Track
 {
-    public static function handle()
+    public static function handle(array $argv)
     {
         print __METHOD__ . PHP_EOL;
     }
