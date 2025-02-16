@@ -23,19 +23,16 @@ class Configuration
 
     public function create()
     {
-        //repeated call
-        if (file_exists($this->FILE)) {
-            print "Configuration exists already\n";
-            return 0;
-        }
-
         // setup configuration
         mkdir($this->PATH, 0700, true);
         file_put_contents(
             $this->FILE,
             file_get_contents(self::XML_DEFAULT)
         );
+    }
 
-        print "Configuration established\n";
+    public function exists()
+    {
+        return file_exists($this->FILE);
     }
 }

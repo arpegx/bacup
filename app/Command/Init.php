@@ -8,6 +8,14 @@ class Init
 {
     public static function handle(array $argv)
     {
+        //repeated call
+        if (Configuration::getInstance()->exists()) {
+            print "Configuration exists already\n";
+            return 0;
+        }
+
         Configuration::getInstance()->create();
+
+        print "Configuration established\n";
     }
 }
