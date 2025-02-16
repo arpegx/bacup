@@ -5,8 +5,15 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
+use Arpgex\Bacup\Model\Configuration;
 
 if (count($argv) <= 1) {
+    help();
+    return;
+}
+
+if (!($argv[1] === 'init') && !Configuration::getInstance()->exists()) {
+    print "Configuration doesnt exists";
     help();
     return;
 }
