@@ -14,8 +14,13 @@ class Init
             return 0;
         }
 
-        Configuration::getInstance()->create();
+        try {
+            Configuration::getInstance()->create();
+            print "Configuration established\n";
 
-        print "Configuration established\n";
+        } catch (\Exception $e) {
+            print $e->getMessage();
+        }
+
     }
 }
