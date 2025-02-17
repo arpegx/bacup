@@ -6,21 +6,13 @@ use Arpgex\Bacup\Model\Configuration;
 
 class Init
 {
+    public static $middleware = [
+        "no_init",
+    ];
+
     public static function handle(array $argv)
     {
-        //repeated call
-        if (Configuration::getInstance()->exists()) {
-            print "Configuration exists already\n";
-            exit(1);
-        }
-
-        try {
-            Configuration::getInstance()->create();
-            print "Configuration established\n";
-
-        } catch (\Exception $e) {
-            print $e->getMessage();
-        }
-
+        Configuration::getInstance()->create();
+        print "Configuration established\n";
     }
 }
