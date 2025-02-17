@@ -2,9 +2,6 @@
 
 namespace Arpegx\Bacup\Routing;
 
-use Arpegx\Bacup\Command\Init;
-use Arpegx\Bacup\Command\Track;
-
 class Router
 {
     public static function handle($argv)
@@ -15,17 +12,11 @@ class Router
         }
 
         try {
-            switch ($argv[1]) {
-                case "init":
-                    self::middleware(Init::$middleware);
-                    Init::handle($argv);
-                case "track":
-                    self::middleware(Track::$middleware);
-                    Track::handle($argv);
-                    break;
-                default:
-                    help();
-            }
+            $command = 'Arpegx\Bacup\Command\\' . ucfirst($argv[1]);
+
+            self::middleware($command::$middleware);
+            $command::handle($argv);
+
         } catch (\Exception $e) {
             print $e->getMessage();
             exit(1);
