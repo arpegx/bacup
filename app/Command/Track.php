@@ -2,12 +2,14 @@
 
 namespace Arpegx\Bacup\Command;
 
-class Track
+class Track extends Command
 {
-    public static $middleware = [
+    #[Override]
+    protected static array $middleware = [
         "init",
     ];
 
+    #[Override]
     public static function handle(array $argv)
     {
         print __METHOD__ . PHP_EOL;

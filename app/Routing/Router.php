@@ -14,7 +14,7 @@ class Router
         try {
             $command = 'Arpegx\Bacup\Command\\' . ucfirst($argv[1]);
 
-            self::middleware($command::$middleware);
+            self::middleware($command::middleware());
             $command::handle($argv);
 
         } catch (\Exception $e) {

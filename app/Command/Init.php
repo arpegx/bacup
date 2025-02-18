@@ -4,12 +4,14 @@ namespace Arpegx\Bacup\Command;
 
 use Arpgex\Bacup\Model\Configuration;
 
-class Init
+class Init extends Command
 {
-    public static $middleware = [
+    #[Override]
+    protected static array $middleware = [
         "no_init",
     ];
 
+    #[Override]
     public static function handle(array $argv)
     {
         Configuration::getInstance()->create();
