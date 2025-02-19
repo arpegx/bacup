@@ -2,20 +2,24 @@
 
 namespace Arpegx\Bacup\Routing;
 
+use Arpegx\Bacup\Command\Help;
+
 class Router
 {
-    public static function handle($argv)
+    private string $cmd = Help::class;
+    private string $namespace = 'Arpegx\Bacup\Command\\';
+
+    public function __construct(
+        private array $params = ["bacup", null],
+    ) {
+    }
+    public function handle()
     {
-        if (count($argv) <= 1) {
-            help();
-            exit(0);
-        }
-
         try {
-            $command = 'Arpegx\Bacup\Command\\' . ucfirst($argv[1]);
-
-            self::middleware($command::middleware());
-            $command::handle($argv);
+            $this
+                ->resolve()
+                ->middleware()
+                ->execute();
 
         } catch (\Exception $e) {
             print $e->getMessage();
@@ -23,15 +27,22 @@ class Router
         }
     }
 
-    public static function middleware(array $middlewares)
+    private function resolve()
     {
-        foreach ($middlewares as $middleware) {
+        if (class_exists($class = $this->namespace . ucfirst($this->params[1]))) {
+            $this->cmd = $class;
+        }
+        return $this;
+    }
+    private function middleware()
+    {
+        foreach ($this->cmd::middleware() as $middleware) {
             call_user_func([Rules::class, $middleware]) ?: throw new \Exception("Rule {$middleware} failed");
         }
+        return $this;
     }
-}
-
-function help()
-{
-    print "Help Message\n";
+    private function execute()
+    {
+        $this->cmd::handle($this->params);
+    }
 }
