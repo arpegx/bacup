@@ -74,7 +74,8 @@ class Configuration
     }
 
     /**
-     *. initianlize configuration prerequisetes
+     *. initialize configuration prerequisites
+     * @return static
      */
     public function create()
     {
