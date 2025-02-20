@@ -10,6 +10,6 @@ test("Configuration::exists", function () {
 });
 
 test("Configuration::create", function () {
-    Configuration::getInstance()->create();
+    Configuration::getInstance()->create()->save();
     expect(Configuration::getInstance()->exists())->toBe(file_exists($_ENV["HOME"] . "/.config/bacup/config.xml"));
 });

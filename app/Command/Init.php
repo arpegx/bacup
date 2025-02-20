@@ -6,15 +6,24 @@ use Arpgex\Bacup\Model\Configuration;
 
 class Init extends Command
 {
-    #[Override]
+    /**
+     *. defines middleware
+     * @var array
+     */
+    #[\Override]
     protected static array $middleware = [
         "no_init",
     ];
 
-    #[Override]
+    /**
+     *. initialize configuration
+     * @param array $argv
+     * @return void
+     */
+    #[\Override]
     public static function handle(array $argv)
     {
-        Configuration::getInstance()->create();
+        Configuration::getInstance()->create()->save();
         print "Configuration established\n";
     }
 }
