@@ -37,7 +37,8 @@ class Router
     private function middleware()
     {
         foreach ($this->cmd::middleware() as $middleware) {
-            call_user_func([Rules::class, $middleware]) ?: throw new \Exception("Rule {$middleware} failed");
+            $validated = call_user_func([Rules::class, $middleware]);
+            $validated["result"] ?: throw new \Exception($validated["message"]);
         }
         return $this;
     }
