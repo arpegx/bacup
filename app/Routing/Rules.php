@@ -8,7 +8,7 @@ class Rules
 {
     /**
      *. checks for configuration to be existent
-     * @return array{message: string, result: bool}
+     * @return array{result: bool, message: string}
      */
     public static function init()
     {
@@ -20,7 +20,7 @@ class Rules
 
     /**
      *. checks for configuration to be non-existent
-     * @return array{message: string, result: bool}
+     * @return array{result: bool, message: string}
      */
     public static function no_init()
     {
