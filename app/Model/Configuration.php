@@ -98,7 +98,7 @@ class Configuration
         if ($this->configuration->schemaValidate(self::XSD_SCHEMA)) {
             file_put_contents(
                 $this->FILE,
-                $this->configuration,
+                $this->configuration->saveXML(),
             );
         } else {
             throw new \Exception("Schemata Validation failed");
