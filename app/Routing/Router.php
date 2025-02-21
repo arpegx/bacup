@@ -3,6 +3,7 @@
 namespace Arpegx\Bacup\Routing;
 
 use Arpegx\Bacup\Command\Help;
+use Webmozart\Assert\Assert;
 
 class Router
 {
@@ -64,11 +65,13 @@ class Router
      */
     private function middleware()
     {
-        foreach ($this->cmd::middleware() as $middleware) {
-            $validated = call_user_func([Rules::class, $middleware]);
+        array_map(function ($rule) {
 
-            $validated["result"] ?: throw new \Exception($validated["message"]);
-        }
+            extract(call_user_func([Rules::class, $rule]));
+            Assert::notFalse($result, $message);
+
+        }, $this->cmd::middleware());
+
         return $this;
     }
 

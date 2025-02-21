@@ -2,6 +2,8 @@
 
 namespace Arpgex\Bacup\Model;
 
+use Webmozart\Assert\Assert;
+
 class Configuration
 {
     /**
@@ -79,12 +81,9 @@ class Configuration
      */
     public function create()
     {
-        try {
-            mkdir($this->PATH, 0700, true);
+        mkdir($this->PATH, 0700, true);
+        Assert::directory($this->PATH, "Failed to create directory " . $this->PATH);
 
-        } catch (\Exception $e) {
-            throw new \Exception("Failed to create directory " . $this->PATH);
-        }
         return $this;
     }
 
@@ -95,14 +94,8 @@ class Configuration
      */
     public function save()
     {
-        if ($this->configuration->schemaValidate(self::XSD_SCHEMA)) {
-            file_put_contents(
-                $this->FILE,
-                $this->configuration->saveXML(),
-            );
-        } else {
-            throw new \Exception("Schemata Validation failed");
-        }
+        Assert::true($this->configuration->schemaValidate(self::XSD_SCHEMA), "Schemata Validation failed");
+        file_put_contents($this->FILE, $this->configuration->saveXML());
     }
 
     /**
