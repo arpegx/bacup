@@ -32,7 +32,7 @@ try {
   }
 
   foreach ($includes["directory"] as $directory) {
-    $phar->buildFromIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS), __DIR__);
+    $phar->buildFromIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS)), __DIR__);
   }
 
   # Set shebang
