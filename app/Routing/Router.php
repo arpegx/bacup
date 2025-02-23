@@ -24,7 +24,7 @@ class Router
      * @param array $params
      */
     public function __construct(
-        private array $params = ["bacup", null],
+        private array $params = ["bacup", ""],
     ) {
     }
 
