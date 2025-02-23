@@ -37,4 +37,37 @@ describe("Router", function () {
             expect($cmd->getValue($dummy))->toEqual($arg[2]);
         }
     });
+
+    describe("middleware", function () {
+        test("init fails on no_init", function () {
+
+            $dummy = new Router(["bacup", "init"]);
+            $router = new ReflectionClass(Router::class);
+
+
+            $cmd = $router->getProperty('cmd');
+            $cmd->setAccessible(true);
+            $cmd->setValue($dummy, Init::class);
+
+            $resolve = $router->getMethod("middleware");
+            $resolve->invoke($dummy);
+
+        })->throws(\Exception::class);
+
+        test("init succeeds on no_init", function () {
+            system("rm -rf " . $_ENV["HOME"] . "/.config/bacup");
+
+            $dummy = new Router(["bacup", "init"]);
+            $router = new ReflectionClass(Router::class);
+
+
+            $cmd = $router->getProperty('cmd');
+            $cmd->setAccessible(true);
+            $cmd->setValue($dummy, Init::class);
+
+            $resolve = $router->getMethod("middleware");
+            $resolve->invoke($dummy);
+
+        })->throwsNoExceptions();
+    });
 });
