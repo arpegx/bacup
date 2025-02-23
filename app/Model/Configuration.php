@@ -77,6 +77,7 @@ class Configuration
 
     /**
      *. initialize configuration prerequisites
+     * @throws \Webmozart\Assert\InvalidArgumentException
      * @return static
      */
     public function create()
@@ -89,7 +90,7 @@ class Configuration
 
     /**
      *. save virtual dom to configuration file
-     * @throws \Exception
+     * @throws \Webmozart\Assert\InvalidArgumentException
      * @return void
      */
     public function save()

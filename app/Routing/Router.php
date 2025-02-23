@@ -60,7 +60,7 @@ class Router
 
     /**
      *. validate middleware restrictions
-     * @throws \Exception
+     * @throws \Webmozart\Assert\InvalidArgumentException
      * @return static
      */
     private function middleware()
