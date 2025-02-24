@@ -39,7 +39,28 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function reflect(string $class, array $set = [], array $invoke = [], array $gets = [])
 {
-    // ..
+    $_class = new $class();
+    $reflection = new ReflectionClass($class);
+
+    array_walk($set, function ($value, $key) use ($reflection, $_class) {
+        $property = $reflection->getProperty($key);
+        $property->setAccessible(true);
+        $property->setValue($_class, $value);
+    });
+
+    array_walk($invoke, function ($value) use ($reflection, $_class) {
+        $method = $reflection->getMethod($value);
+        $method->invoke($_class);
+    });
+
+    $result = array();
+    foreach ($gets as $get) {
+        $property = $reflection->getProperty($get);
+        $property->setAccessible(true);
+        $result[$get] = $property->getValue($_class);
+    }
+
+    return $result;
 }

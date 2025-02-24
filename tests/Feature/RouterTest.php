@@ -25,49 +25,35 @@ describe("Router", function () {
         ];
         foreach ($params as $arg) {
 
-            $dummy = new Router([$arg[0], $arg[1]]);
+            $result = reflect(
+                class: Router::class,
+                set: ["params" => [$arg[0], $arg[1]]],
+                invoke: ["resolve"],
+                gets: ["cmd"],
+            );
 
-            $router = new ReflectionClass(Router::class);
-            $resolve = $router->getMethod("resolve");
-            $cmd = $router->getProperty("cmd");
-            $cmd->setAccessible(true);
-
-            $resolve->invoke($dummy);
-
-            expect($cmd->getValue($dummy))->toEqual($arg[2]);
+            expect($result["cmd"])->toEqual($arg[2]);
         }
     });
 
     describe("middleware", function () {
         test("init fails on no_init", function () {
 
-            $dummy = new Router(["bacup", "init"]);
-            $router = new ReflectionClass(Router::class);
-
-
-            $cmd = $router->getProperty('cmd');
-            $cmd->setAccessible(true);
-            $cmd->setValue($dummy, Init::class);
-
-            $resolve = $router->getMethod("middleware");
-            $resolve->invoke($dummy);
-
+            reflect(
+                class: Router::class,
+                set: ["cmd" => Init::class],
+                invoke: ["middleware"]
+            );
         })->throws(\Exception::class);
 
         test("init succeeds on no_init", function () {
             system("rm -rf " . $_ENV["HOME"] . "/.config/bacup");
 
-            $dummy = new Router(["bacup", "init"]);
-            $router = new ReflectionClass(Router::class);
-
-
-            $cmd = $router->getProperty('cmd');
-            $cmd->setAccessible(true);
-            $cmd->setValue($dummy, Init::class);
-
-            $resolve = $router->getMethod("middleware");
-            $resolve->invoke($dummy);
-
+            reflect(
+                class: Router::class,
+                set: ["cmd" => Init::class],
+                invoke: ["middleware"]
+            );
         })->throwsNoExceptions();
     });
 });
