@@ -39,6 +39,14 @@ expect()->extend('toBeOne', function () {
 |
 */
 
+/**
+ * Reflection Helper
+ * @param string $class
+ * @param array $set
+ * @param array $invoke
+ * @param array $gets
+ * @return array
+ */
 function reflect(string $class, array $set = [], array $invoke = [], array $gets = [])
 {
     $_class = new $class();
@@ -51,8 +59,7 @@ function reflect(string $class, array $set = [], array $invoke = [], array $gets
     });
 
     array_walk($invoke, function ($value) use ($reflection, $_class) {
-        $method = $reflection->getMethod($value);
-        $method->invoke($_class);
+        ($reflection->getMethod($value))->invoke($_class);
     });
 
     $result = array();

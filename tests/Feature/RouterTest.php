@@ -7,16 +7,19 @@ use Arpegx\Bacup\Routing\Router;
 
 describe("Router", function () {
 
+    //. __construct ---------------------------------------------------------------------
     test("__construct", function () {
         expect(new Router)->toBeInstanceOf(Router::class);
     });
 
+    //. handle --------------------------------------------------------------------------
     test("handle", function () {
         $params = ["bacup", ""];
 
         expect((new Router($params))->handle())->toEqual(Help::handle($params));
     });
 
+    //. resolve -------------------------------------------------------------------------
     test("resolve", function () {
         $params = [
             ["bacup", "help", Help::class],
@@ -36,6 +39,7 @@ describe("Router", function () {
         }
     });
 
+    //. middleware ----------------------------------------------------------------------
     describe("middleware", function () {
         test("init fails on no_init", function () {
 
@@ -56,4 +60,7 @@ describe("Router", function () {
             );
         })->throwsNoExceptions();
     });
+
+    //. execute -------------------------------------------------------------------------
+    test("execute", function () { })->skip(message: "Barely testable void fn");
 });
