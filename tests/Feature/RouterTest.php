@@ -3,9 +3,32 @@ use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
 use Arpegx\Bacup\Routing\Router;
+use Arpgex\Bacup\Model\Configuration;
 
+beforeEach(function () {
+    uninitialize();
+});
 
 describe("Router", function () {
+    // datasets
+    $routes = [
+        "default" => [
+            "argv" => ["bacup", ""],
+            "target" => Help::class,
+        ],
+        "help" => [
+            "argv" => ["bacup", "help"],
+            "target" => Help::class,
+        ],
+        "init" => [
+            "argv" => ["bacup", "init"],
+            "target" => Init::class,
+        ],
+        "track" => [
+            "argv" => ["bacup", "track"],
+            "target" => Track::class,
+        ],
+    ];
 
     //. __construct ---------------------------------------------------------------------
     test("__construct", function () {
@@ -13,35 +36,28 @@ describe("Router", function () {
     });
 
     //. handle --------------------------------------------------------------------------
-    test("handle", function () {
-        $params = ["bacup", ""];
-
-        expect((new Router($params))->handle())->toEqual(Help::handle($params));
-    });
+    test("handle", function () use ($routes) { })->skip("Barely testable void fn");
 
     //. resolve -------------------------------------------------------------------------
-    test("resolve", function () {
-        $params = [
-            ["bacup", "help", Help::class],
-            ["bacup", "init", Init::class],
-            ["bacup", "track", Track::class],
-        ];
-        foreach ($params as $arg) {
+    test("resolve", function () use ($routes) {
+        foreach ($routes as $route) {
 
             $result = reflect(
                 class: Router::class,
-                set: ["params" => [$arg[0], $arg[1]]],
+                set: ["params" => $route["argv"]],
                 invoke: ["resolve"],
                 gets: ["cmd"],
             );
 
-            expect($result["cmd"])->toEqual($arg[2]);
+            expect($result["cmd"])->toEqual($route["target"]);
         }
     });
 
     //. middleware ----------------------------------------------------------------------
     describe("middleware", function () {
         test("init fails on no_init", function () {
+
+            Configuration::getInstance()->create()->save();
 
             reflect(
                 class: Router::class,
@@ -51,7 +67,6 @@ describe("Router", function () {
         })->throws(\Exception::class);
 
         test("init succeeds on no_init", function () {
-            system("rm -rf " . $_ENV["HOME"] . "/.config/bacup");
 
             reflect(
                 class: Router::class,

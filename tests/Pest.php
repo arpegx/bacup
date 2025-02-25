@@ -71,3 +71,10 @@ function reflect(string $class, array $set = [], array $invoke = [], array $gets
 
     return $result;
 }
+
+function uninitialize()
+{
+    if (file_exists($_ENV["HOME"] . "/.config/bacup")) {
+        system("rm -rf " . $_ENV["HOME"] . "/.config/bacup");
+    }
+}
