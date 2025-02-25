@@ -3,7 +3,7 @@ oci = oci_bacup
 phar = build/bacup.phar
 extract_dir = build/extract
 
-.PHONY: build run ssh test release extract clean
+.PHONY: build run ssh test release clean
 
 build:
 	podman build -t ${image} .
@@ -25,8 +25,7 @@ release: run
 	make clean
 
 clean:
-	@podman --out=/dev/null kill ${oci}; \ 
-	podman --out=/dev/null stop ${oci}; \
-	podman --out=/dev/null rm ${oci}; \
+	@podman --out=/dev/null kill ${oci}; \
+	podman --out=/dev/null rm ${oci} --force; \
 	podman --out=/dev/null image prune --force; \
-	podman --out=/dev/null image rm ${image}
+	podman --out=/dev/null image rm ${image} --force 

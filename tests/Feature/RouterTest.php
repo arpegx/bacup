@@ -7,20 +7,24 @@ use Arpgex\Bacup\Model\Configuration;
 
 dataset("routes", [
     "default" => [
-        "argv" => ["bacup", ""],
+        "argv" => ["app" => "bacup", "command" => ""],
         "target" => Help::class,
+        "condition" => [fn() => null],
     ],
     "help" => [
-        "argv" => ["bacup", "help"],
+        "argv" => ["app" => "bacup", "command" => "help"],
         "target" => Help::class,
+        "condition" => [fn() => null],
     ],
     "init" => [
-        "argv" => ["bacup", "init"],
+        "argv" => ["app" => "bacup", "command" => "init"],
         "target" => Init::class,
+        "condition" => [fn() => null],
     ],
     "track" => [
-        "argv" => ["bacup", "track"],
+        "argv" => ["app" => "bacup", "command" => "track"],
         "target" => Track::class,
+        "condition" => [fn() => Configuration::getInstance()->create()->save()],
     ],
 ]);
 
@@ -35,10 +39,16 @@ describe("Router", function () {
     });
 
     //. handle --------------------------------------------------------------------------
-    test("handle", function () { })->skip("Barely testable void fn");
+    test("handle", function ($argv, $target, $condition) {
+        call_user_func(...$condition);
+
+        exec("./{$argv["app"]} {$argv["command"]}", $output, $result_code);
+        expect($result_code)->toBe(0);
+
+    })->with("routes");
 
     //. resolve -------------------------------------------------------------------------
-    test("resolve", function ($argv, $target) {
+    test("resolve", function ($argv, $target, $condition) {
         $result = reflect(
             class: Router::class,
             set: ["params" => $argv],

@@ -5,4 +5,4 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Arpegx\Bacup\Routing\Router;
 
-(new Router($argv))->handle();
+(new Router(["app" => $argv[0], "command" => $argv[1]]))->handle();

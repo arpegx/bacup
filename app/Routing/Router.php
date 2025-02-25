@@ -24,7 +24,7 @@ class Router
      * @param array $params
      */
     public function __construct(
-        private array $params = ["bacup", ""],
+        private array $params = ["app" => "bacup", "command" => ""],
     ) {
     }
 
@@ -34,6 +34,8 @@ class Router
      */
     public function handle()
     {
+        $this->params["command"] ??= "";
+
         try {
             $this
                 ->resolve()
@@ -52,7 +54,7 @@ class Router
      */
     private function resolve()
     {
-        if (class_exists($class = $this->namespace . ucfirst($this->params[1]))) {
+        if (class_exists($class = $this->namespace . ucfirst($this->params["command"]))) {
             $this->cmd = $class;
         }
         return $this;
