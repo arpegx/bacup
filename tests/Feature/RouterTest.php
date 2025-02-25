@@ -5,53 +5,50 @@ use Arpegx\Bacup\Command\Track;
 use Arpegx\Bacup\Routing\Router;
 use Arpgex\Bacup\Model\Configuration;
 
+dataset("routes", [
+    "default" => [
+        "argv" => ["bacup", ""],
+        "target" => Help::class,
+    ],
+    "help" => [
+        "argv" => ["bacup", "help"],
+        "target" => Help::class,
+    ],
+    "init" => [
+        "argv" => ["bacup", "init"],
+        "target" => Init::class,
+    ],
+    "track" => [
+        "argv" => ["bacup", "track"],
+        "target" => Track::class,
+    ],
+]);
+
 beforeEach(function () {
     uninitialize();
 });
 
 describe("Router", function () {
-    // datasets
-    $routes = [
-        "default" => [
-            "argv" => ["bacup", ""],
-            "target" => Help::class,
-        ],
-        "help" => [
-            "argv" => ["bacup", "help"],
-            "target" => Help::class,
-        ],
-        "init" => [
-            "argv" => ["bacup", "init"],
-            "target" => Init::class,
-        ],
-        "track" => [
-            "argv" => ["bacup", "track"],
-            "target" => Track::class,
-        ],
-    ];
-
     //. __construct ---------------------------------------------------------------------
     test("__construct", function () {
         expect(new Router)->toBeInstanceOf(Router::class);
     });
 
     //. handle --------------------------------------------------------------------------
-    test("handle", function () use ($routes) { })->skip("Barely testable void fn");
+    test("handle", function () { })->skip("Barely testable void fn");
 
     //. resolve -------------------------------------------------------------------------
-    test("resolve", function () use ($routes) {
-        foreach ($routes as $route) {
+    test("resolve", function ($argv, $target) {
+        $result = reflect(
+            class: Router::class,
+            set: ["params" => $argv],
+            invoke: ["resolve"],
+            gets: ["cmd"],
+        );
 
-            $result = reflect(
-                class: Router::class,
-                set: ["params" => $route["argv"]],
-                invoke: ["resolve"],
-                gets: ["cmd"],
-            );
+        expect($result["cmd"])->toEqual($target);
 
-            expect($result["cmd"])->toEqual($route["target"]);
-        }
-    });
+    })->with("routes");
 
     //. middleware ----------------------------------------------------------------------
     describe("middleware", function () {
