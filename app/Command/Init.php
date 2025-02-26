@@ -2,6 +2,7 @@
 
 namespace Arpegx\Bacup\Command;
 
+use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
 
 class Init extends Command
@@ -12,7 +13,7 @@ class Init extends Command
      */
     #[\Override]
     protected static array $middleware = [
-        "no_init",
+        Rules::NO_INIT,
     ];
 
     /**

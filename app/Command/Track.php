@@ -2,6 +2,8 @@
 
 namespace Arpegx\Bacup\Command;
 
+use Arpegx\Bacup\Routing\Rules;
+
 class Track extends Command
 {
     /**
@@ -10,7 +12,7 @@ class Track extends Command
      */
     #[\Override]
     protected static array $middleware = [
-        "init",
+        Rules::INIT,
     ];
 
     /**

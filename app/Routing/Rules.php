@@ -6,6 +6,9 @@ use Arpgex\Bacup\Model\Configuration;
 
 class Rules
 {
+    const INIT = "init";
+    const NO_INIT = "no_init";
+
     /**
      *. checks for configuration to be existent
      * @return array{result: bool, message: string}
