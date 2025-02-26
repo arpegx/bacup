@@ -93,3 +93,15 @@ function fulfill(string $rule)
             break;
     }
 }
+
+function fail(string $rule)
+{
+    switch ($rule) {
+        case Rules::INIT:
+            uninitialize();
+            break;
+        case Rules::NO_INIT:
+            Configuration::getInstance()->create()->save();
+            break;
+    }
+}

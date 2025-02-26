@@ -38,7 +38,9 @@ beforeEach(function () {
 describe("Router", function () {
     //. __construct ---------------------------------------------------------------------
     test("__construct", function () {
+
         expect(new Router)->toBeInstanceOf(Router::class);
+
     });
 
     //. handle --------------------------------------------------------------------------
@@ -53,6 +55,7 @@ describe("Router", function () {
 
     //. resolve -------------------------------------------------------------------------
     test("resolve", function ($argv, $target, $conditions) {
+
         $result = reflect(
             class: Router::class,
             set: ["params" => $argv],
@@ -66,16 +69,26 @@ describe("Router", function () {
 
     //. middleware ----------------------------------------------------------------------
     describe("middleware", function () {
-        test("init fails on no_init", function () {
 
-            Configuration::getInstance()->create()->save();
+        test("fails on invalid conditions", function ($argv, $target, $conditions) {
 
-            reflect(
-                class: Router::class,
-                set: ["cmd" => Init::class],
-                invoke: ["middleware"]
-            );
-        })->throws(\Exception::class);
+            if (!empty($conditions)) {
+
+                array_walk($conditions, fn($rule) => fail($rule));
+                expect(
+                    fn() =>
+                    reflect(
+                        class: Router::class,
+                        set: ["cmd" => $target],
+                        invoke: ["middleware"]
+                    )
+                )->toThrow(\Webmozart\Assert\InvalidArgumentException::class);
+
+            } else {
+                $this->markTestSkipped("no middleware defined");
+            }
+
+        })->with("routes")->skip(!empty($conditions));
 
         test("succeeds on valid conditions", function ($argv, $target, $conditions) {
 
