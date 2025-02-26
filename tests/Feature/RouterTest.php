@@ -3,8 +3,6 @@ use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
 use Arpegx\Bacup\Routing\Router;
-use Arpegx\Bacup\Routing\Rules;
-use Arpgex\Bacup\Model\Configuration;
 
 dataset("routes", [
     "default" => [
@@ -73,7 +71,6 @@ describe("Router", function () {
         test("fails on invalid conditions", function ($argv, $target, $conditions) {
 
             if (!empty($conditions)) {
-
                 array_walk($conditions, fn($rule) => fail($rule));
                 expect(
                     fn() =>
@@ -83,9 +80,6 @@ describe("Router", function () {
                         invoke: ["middleware"]
                     )
                 )->toThrow(\Webmozart\Assert\InvalidArgumentException::class);
-
-            } else {
-                $this->markTestSkipped("no middleware defined");
             }
 
         })->with("routes")->skip(!empty($conditions));
@@ -93,7 +87,6 @@ describe("Router", function () {
         test("succeeds on valid conditions", function ($argv, $target, $conditions) {
 
             array_walk($conditions, fn($rule) => fulfill($rule));
-
             reflect(
                 class: Router::class,
                 set: ["cmd" => $target],

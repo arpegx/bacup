@@ -43,7 +43,7 @@ expect()->extend('toBeOne', function () {
 */
 
 /**
- * Reflection Helper
+ *. Reflection Helper
  * @param string $class
  * @param array $set
  * @param array $invoke
@@ -75,6 +75,10 @@ function reflect(string $class, array $set = [], array $invoke = [], array $gets
     return $result;
 }
 
+/**
+ *. delete config diretory
+ * @return void
+ */
 function uninitialize()
 {
     if (file_exists($_ENV["HOME"] . "/.config/bacup")) {
@@ -82,6 +86,11 @@ function uninitialize()
     }
 }
 
+/**
+ *. create cirumstances to fulfill a given rule
+ * @param string $rule
+ * @return void
+ */
 function fulfill(string $rule)
 {
     switch ($rule) {
@@ -94,6 +103,11 @@ function fulfill(string $rule)
     }
 }
 
+/**
+ *. create circumstances to fail a given rule
+ * @param string $rule
+ * @return void
+ */
 function fail(string $rule)
 {
     switch ($rule) {

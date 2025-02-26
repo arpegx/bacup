@@ -16,7 +16,7 @@ ssh: build
 	make clean
 
 test: run
-	podman exec -t ${oci} bash -c "./vendor/bin/pest --no-output --dont-report-useless-tests"; \
+	podman exec -t ${oci} bash -c "./vendor/bin/pest --no-output --dont-report-useless-tests --coverage --profile"; \
 	make clean
 
 release: run
