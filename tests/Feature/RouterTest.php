@@ -3,28 +3,31 @@ use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
 use Arpegx\Bacup\Routing\Router;
+use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
 
 dataset("routes", [
     "default" => [
         "argv" => ["app" => "bacup", "command" => ""],
         "target" => Help::class,
-        "conditions" => [fn() => null],
+        "conditions" => reflect(Help::class, gets: ["middleware"])["middleware"],
+
     ],
     "help" => [
         "argv" => ["app" => "bacup", "command" => "help"],
         "target" => Help::class,
-        "conditions" => [fn() => null],
+        "conditions" => reflect(Help::class, gets: ["middleware"])["middleware"],
+
     ],
     "init" => [
         "argv" => ["app" => "bacup", "command" => "init"],
         "target" => Init::class,
-        "conditions" => ["no_init" => fn() => uninitialize()],
+        "conditions" => reflect(Init::class, gets: ["middleware"])["middleware"],
     ],
     "track" => [
         "argv" => ["app" => "bacup", "command" => "track"],
         "target" => Track::class,
-        "conditions" => ["init" => fn() => Configuration::getInstance()->create()->save()],
+        "conditions" => reflect(Track::class, gets: ["middleware"])["middleware"],
     ],
 ]);
 
@@ -40,7 +43,8 @@ describe("Router", function () {
 
     //. handle --------------------------------------------------------------------------
     test("handle", function ($argv, $target, $conditions) {
-        array_walk($conditions, fn($condition) => call_user_func($condition));
+
+        array_walk($conditions, fn($rule) => fulfill($rule));
 
         exec("./{$argv["app"]} {$argv["command"]}", $output, $result_code);
         expect($result_code)->toBe(0);
@@ -75,7 +79,7 @@ describe("Router", function () {
 
         test("succeeds on valid conditions", function ($argv, $target, $conditions) {
 
-            array_walk($conditions, fn($condition) => call_user_func($condition));
+            array_walk($conditions, fn($rule) => fulfill($rule));
 
             reflect(
                 class: Router::class,

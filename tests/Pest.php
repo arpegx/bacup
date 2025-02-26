@@ -1,5 +1,8 @@
 <?php
 
+use Arpegx\Bacup\Routing\Rules;
+use Arpgex\Bacup\Model\Configuration;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -76,5 +79,17 @@ function uninitialize()
 {
     if (file_exists($_ENV["HOME"] . "/.config/bacup")) {
         system("rm -rf " . $_ENV["HOME"] . "/.config/bacup");
+    }
+}
+
+function fulfill(string $rule)
+{
+    switch ($rule) {
+        case Rules::INIT:
+            Configuration::getInstance()->create()->save();
+            break;
+        case Rules::NO_INIT:
+            uninitialize();
+            break;
     }
 }
