@@ -82,7 +82,7 @@ describe("Router", function () {
                 )->toThrow(\Webmozart\Assert\InvalidArgumentException::class);
             }
 
-        })->with("routes")->skip(!empty($conditions));
+        })->with("routes");
 
         test("succeeds on valid conditions", function ($argv, $target, $conditions) {
 
