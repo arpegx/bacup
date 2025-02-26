@@ -9,22 +9,22 @@ dataset("routes", [
     "default" => [
         "argv" => ["app" => "bacup", "command" => ""],
         "target" => Help::class,
-        "condition" => [fn() => null],
+        "conditions" => [fn() => null],
     ],
     "help" => [
         "argv" => ["app" => "bacup", "command" => "help"],
         "target" => Help::class,
-        "condition" => [fn() => null],
+        "conditions" => [fn() => null],
     ],
     "init" => [
         "argv" => ["app" => "bacup", "command" => "init"],
         "target" => Init::class,
-        "condition" => [fn() => null],
+        "conditions" => [fn() => null],
     ],
     "track" => [
         "argv" => ["app" => "bacup", "command" => "track"],
         "target" => Track::class,
-        "condition" => [fn() => Configuration::getInstance()->create()->save()],
+        "conditions" => [fn() => Configuration::getInstance()->create()->save()],
     ],
 ]);
 
@@ -39,8 +39,8 @@ describe("Router", function () {
     });
 
     //. handle --------------------------------------------------------------------------
-    test("handle", function ($argv, $target, $condition) {
-        call_user_func(...$condition);
+    test("handle", function ($argv, $target, $conditions) {
+        array_walk($conditions, fn($condition) => call_user_func($condition));
 
         exec("./{$argv["app"]} {$argv["command"]}", $output, $result_code);
         expect($result_code)->toBe(0);
@@ -48,7 +48,7 @@ describe("Router", function () {
     })->with("routes");
 
     //. resolve -------------------------------------------------------------------------
-    test("resolve", function ($argv, $target, $condition) {
+    test("resolve", function ($argv, $target, $conditions) {
         $result = reflect(
             class: Router::class,
             set: ["params" => $argv],
