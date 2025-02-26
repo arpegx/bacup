@@ -19,12 +19,12 @@ dataset("routes", [
     "init" => [
         "argv" => ["app" => "bacup", "command" => "init"],
         "target" => Init::class,
-        "conditions" => [fn() => null],
+        "conditions" => ["no_init" => fn() => uninitialize()],
     ],
     "track" => [
         "argv" => ["app" => "bacup", "command" => "track"],
         "target" => Track::class,
-        "conditions" => [fn() => Configuration::getInstance()->create()->save()],
+        "conditions" => ["init" => fn() => Configuration::getInstance()->create()->save()],
     ],
 ]);
 
@@ -73,14 +73,16 @@ describe("Router", function () {
             );
         })->throws(\Exception::class);
 
-        test("init succeeds on no_init", function () {
+        test("succeeds on valid conditions", function ($argv, $target, $conditions) {
+
+            array_walk($conditions, fn($condition) => call_user_func($condition));
 
             reflect(
                 class: Router::class,
-                set: ["cmd" => Init::class],
+                set: ["cmd" => $target],
                 invoke: ["middleware"]
             );
-        })->throwsNoExceptions();
+        })->with("routes")->throwsNoExceptions();
     });
 
     //. execute -------------------------------------------------------------------------
