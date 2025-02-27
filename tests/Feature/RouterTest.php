@@ -70,18 +70,29 @@ describe("Router", function () {
 
         test("fails on invalid conditions", function ($argv, $target, $conditions) {
 
-            if (!empty($conditions)) {
-                array_walk($conditions, fn($rule) => fail($rule));
-                expect(
-                    fn() =>
-                    reflect(
-                        class: Router::class,
-                        set: ["cmd" => $target],
-                        invoke: ["middleware"]
-                    )
-                )->toThrow(\Webmozart\Assert\InvalidArgumentException::class);
-            }
+            if ((bool) $stack = sizeof($conditions)) {
+                do {
+                    static $fail_on = 0;
 
+                    for ($index = 0; $index < $stack; $index++) {
+                        $index == $fail_on
+                            ? fail($conditions[$fail_on])
+                            : fulfill($conditions[$index]);
+                    }
+
+                    expect(
+                        fn() =>
+                        reflect(
+                            class: Router::class,
+                            set: ["cmd" => $target],
+                            invoke: ["middleware"]
+                        )
+                    )->toThrow(\Webmozart\Assert\InvalidArgumentException::class);
+
+                    $fail_on++;
+
+                } while ($fail_on < $stack);
+            }
         })->with("routes");
 
         test("succeeds on valid conditions", function ($argv, $target, $conditions) {
