@@ -25,26 +25,17 @@ class Router
      */
     private string $cmd = Help::class;
 
-    /**
-     *. ctor
-     * @param array $params
-     */
-    public function __construct(
-        private array $params = ["app" => "bacup", "command" => ""],
-    ) {
-    }
+    private array $params = array();
 
     /**
      *. handle user input
      * @return void
      */
-    public function handle()
+    public function handle(array $argv)
     {
-        $this->params["command"] ??= "";
-
         try {
             $this
-                ->resolve()
+                ->resolve($argv)
                 ->middleware()
                 ->execute();
 
@@ -58,10 +49,16 @@ class Router
      *. resolve command
      * @return static
      */
-    private function resolve()
+    private function resolve(array $argv)
     {
-        if (key_exists($this->params["command"], $this->routes)) {
-            $this->cmd = $this->routes[$this->params["command"]];
+        switch (true) {
+            case sizeof($argv) >= 2:
+                $this->cmd = key_exists($argv[1], $this->routes) ? $this->routes[$argv[1]] : Help::class;
+            case sizeof($argv) >= 3:
+                $this->params = array_slice($argv, 2);
+                break;
+            default:
+                $this->cmd = Help::class;
         }
 
         return $this;

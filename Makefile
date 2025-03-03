@@ -11,8 +11,8 @@ build: clean
 run: build
 	podman run --replace --name ${oci} -d ${image} -c "sleep infinity"
 
-ssh:
-	podman exec -it ${oci} bash;
+ssh: update
+	@podman exec -it ${oci} bash;
 
 update: 
 	@podman exec -t ${oci} bash -c "rm -rf /usr/src/bacup/*" && \
