@@ -46,7 +46,7 @@ expect()->extend('toBeOne', function () {
  *. Reflection Helper
  * @param string $class
  * @param array $set
- * @param array $invoke
+ * @param array $invoke {string function, mixed param}
  * @param array $gets
  * @return array
  */
@@ -61,9 +61,13 @@ function reflect(string $class, array $set = [], array $invoke = [], array $gets
         $property->setValue($_class, $value);
     });
 
-    array_walk($invoke, function ($value) use ($reflection, $_class) {
-        ($reflection->getMethod($value))->invoke($_class);
-    });
+    if (!empty($invoke)) {
+        $method = $reflection->getMethod($invoke[0]);
+
+        sizeof($invoke) == 2
+            ? $method->invokeArgs($_class, [$invoke[1]])
+            : $method->invoke($_class);
+    }
 
     $result = array();
     foreach ($gets as $get) {

@@ -6,24 +6,24 @@ use Arpegx\Bacup\Routing\Router;
 
 dataset("routes", [
     "default" => [
-        "argv" => ["app" => "bacup", "command" => ""],
+        "argv" => [0 => "bacup", 1 => ""],
         "target" => Help::class,
         "conditions" => reflect(Help::class, gets: ["middleware"])["middleware"],
 
     ],
     "help" => [
-        "argv" => ["app" => "bacup", "command" => "help"],
+        "argv" => [0 => "bacup", 1 => "help"],
         "target" => Help::class,
         "conditions" => reflect(Help::class, gets: ["middleware"])["middleware"],
 
     ],
     "init" => [
-        "argv" => ["app" => "bacup", "command" => "init"],
+        "argv" => [0 => "bacup", 1 => "init"],
         "target" => Init::class,
         "conditions" => reflect(Init::class, gets: ["middleware"])["middleware"],
     ],
     "track" => [
-        "argv" => ["app" => "bacup", "command" => "track"],
+        "argv" => [0 => "bacup", 1 => "track"],
         "target" => Track::class,
         "conditions" => reflect(Track::class, gets: ["middleware"])["middleware"],
     ],
@@ -46,7 +46,7 @@ describe("Router", function () {
 
         array_walk($conditions, fn($rule) => fulfill($rule));
 
-        exec("./{$argv["app"]} {$argv["command"]}", $output, $result_code);
+        exec("./{$argv[0]} {$argv[0]}", $output, $result_code);
         expect($result_code)->toBe(0);
 
     })->with("routes");
@@ -56,8 +56,7 @@ describe("Router", function () {
 
         $result = reflect(
             class: Router::class,
-            set: ["params" => $argv],
-            invoke: ["resolve"],
+            invoke: ["resolve", $argv],
             gets: ["cmd"],
         );
 
