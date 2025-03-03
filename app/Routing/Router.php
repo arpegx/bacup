@@ -3,21 +3,27 @@
 namespace Arpegx\Bacup\Routing;
 
 use Arpegx\Bacup\Command\Help;
+use Arpegx\Bacup\Command\Init;
+use Arpegx\Bacup\Command\Track;
 use Webmozart\Assert\Assert;
 
 class Router
 {
     /**
+     * valid routes
+     * @var array
+     */
+    private array $routes = [
+        "help" => Help::class,
+        "init" => Init::class,
+        "track" => Track::class,
+    ];
+
+    /**
      *. command to be executed
      * @var string
      */
     private string $cmd = Help::class;
-
-    /**
-     *. fullqualified namespace for cmd
-     * @var string
-     */
-    private string $namespace = 'Arpegx\Bacup\Command\\';
 
     /**
      *. ctor
@@ -54,9 +60,10 @@ class Router
      */
     private function resolve()
     {
-        if (class_exists($class = $this->namespace . ucfirst($this->params["command"]))) {
-            $this->cmd = $class;
+        if (key_exists($this->params["command"], $this->routes)) {
+            $this->cmd = $this->routes[$this->params["command"]];
         }
+
         return $this;
     }
 
