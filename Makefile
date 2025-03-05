@@ -9,7 +9,7 @@ build: clean
 	podman build -t ${image} .
 
 run: build
-	podman run --replace --name ${oci} -d ${image} -c "sleep infinity"
+	podman run --network=host -p 9003:9003 --replace --name ${oci} -d ${image} -c "sleep infinity"
 
 ssh: update
 	@podman exec -it ${oci} bash;
