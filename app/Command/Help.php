@@ -2,21 +2,11 @@
 
 namespace Arpegx\Bacup\Command;
 
-use Arpegx\Bacup\Routing\Rules;
 
-class Track extends Command
+class Help extends Command
 {
     /**
-     *. defines middleware
-     * @var array
-     */
-    #[\Override]
-    protected static array $middleware = [
-        Rules::INIT,
-    ];
-
-    /**
-     *. track files
+     *. display help informations
      * @param array $argv
      * @return void
      */

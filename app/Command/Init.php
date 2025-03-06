@@ -2,25 +2,29 @@
 
 namespace Arpegx\Bacup\Command;
 
+use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
 
-class Init
+class Init extends Command
 {
+    /**
+     *. defines middleware
+     * @var array
+     */
+    #[\Override]
+    protected static array $middleware = [
+        Rules::NO_INIT,
+    ];
+
+    /**
+     *. initialize configuration
+     * @param array $argv
+     * @return void
+     */
+    #[\Override]
     public static function handle(array $argv)
     {
-        //repeated call
-        if (Configuration::getInstance()->exists()) {
-            print "Configuration exists already\n";
-            exit(1);
-        }
-
-        try {
-            Configuration::getInstance()->create();
-            print "Configuration established\n";
-
-        } catch (\Exception $e) {
-            print $e->getMessage();
-        }
-
+        Configuration::getInstance()->create()->save();
+        print "Configuration established\n";
     }
 }

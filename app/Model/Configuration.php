@@ -2,15 +2,49 @@
 
 namespace Arpgex\Bacup\Model;
 
+use Webmozart\Assert\Assert;
+
 class Configuration
 {
+    /**
+     *. instance of configuration
+     * @var 
+     */
     private static ?Configuration $instance = null;
+
+    /**
+     *. configuration as virtual dom
+     * @var \DOMDocument
+     */
     private \DOMDocument $configuration;
+
+    /**
+     *. default xml to bootstrap the configuration
+     * @var string
+     */
     const XML_DEFAULT = "data/default.xml";
+
+    /**
+     *. XSD Schemata to validate a configuration
+     * @var string
+     */
     const XSD_SCHEMA = "data/schema.xsd";
+
+    /**
+     *. path to configuration directory located at $HOME/.config/bacup
+     * @var string
+     */
     public readonly string $PATH;
+
+    /**
+     *. configuration file config.xml
+     * @var string
+     */
     public readonly string $FILE;
 
+    /**
+     *. ctor
+     */
     private function __construct()
     {
         // filesystem
@@ -32,27 +66,43 @@ class Configuration
         );
     }
 
+    /**
+     *. instance of configuration
+     * @return Configuration
+     */
     public static function getInstance()
     {
         return self::$instance ??= new Configuration();
     }
 
+    /**
+     *. initialize configuration prerequisites
+     * @throws \Webmozart\Assert\InvalidArgumentException
+     * @return static
+     */
     public function create()
     {
-        if ($this->configuration->schemaValidate(self::XSD_SCHEMA)) {
-            // setup configuration
-            mkdir($this->PATH, 0700, true);
+        mkdir($this->PATH, 0700, true);
+        Assert::directory($this->PATH, "Failed to create directory " . $this->PATH);
 
-
-            file_put_contents(
-                $this->FILE,
-                file_get_contents(self::XML_DEFAULT)
-            );
-        } else {
-            throw new \Exception("Schemata Validation failed");
-        }
+        return $this;
     }
 
+    /**
+     *. save virtual dom to configuration file
+     * @throws \Webmozart\Assert\InvalidArgumentException
+     * @return void
+     */
+    public function save()
+    {
+        Assert::true($this->configuration->schemaValidate(self::XSD_SCHEMA), "Schemata Validation failed");
+        file_put_contents($this->FILE, $this->configuration->saveXML());
+    }
+
+    /**
+     *. checks if configuration is initialized
+     * @return bool
+     */
     public function exists()
     {
         return file_exists($this->FILE);
