@@ -5,5 +5,9 @@ EXPOSE 9003
 RUN apt-get update && apt-get install -y tree \
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
-    && echo ' phar.readonly = "Off" \n xdebug.mode=coverage,debug \n xdebug.start_with_request=yes \n xdebug.client_port=9003 \n xdebug.remote_port=9003 \n xdebug.client_host="host.containers.internal"' >> /usr/local/etc/php/php.ini
+    && echo 'phar.readonly = "Off"' >> /usr/local/etc/php/php.ini \
+    && echo 'xdebug.mode=coverage,debug' >> /usr/local/etc/php/php.ini \
+    && echo 'xdebug.log_level = 0' >> /usr/local/etc/php/php.ini \
+    && echo 'xdebug.start_with_request=yes' >> /usr/local/etc/php/php.ini \
+    && echo 'xdebug.client_host="host.containers.internal"' >> /usr/local/etc/php/php.ini
 ENTRYPOINT ["bash"]

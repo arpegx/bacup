@@ -52,10 +52,6 @@ expect()->extend('toBeOne', function () {
  */
 function reflect(string $class, array $set = [], array $invoke = [], array $gets = [])
 {
-
-    if (key_exists("cmd", $set))
-        var_dump($set["cmd"]);
-
     $_class = new $class();
     $reflection = new ReflectionClass($class);
 

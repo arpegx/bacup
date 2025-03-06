@@ -80,7 +80,7 @@ describe("Router", function () {
                     }
 
                     expect(
-                        fn($target) =>
+                        fn() =>
                         reflect(
                             class: Router::class,
                             set: ["cmd" => $target],
