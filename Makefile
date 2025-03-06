@@ -1,3 +1,4 @@
+# definitions
 image = arpegx/bacup:latest
 oci = oci_bacup
 phar = build/bacup.phar
