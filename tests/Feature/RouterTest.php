@@ -35,34 +35,41 @@ beforeEach(function () {
 
 describe("Router", function () {
     //. __construct ---------------------------------------------------------------------
-    test("__construct", function () {
+    describe("__construct", function () {
 
-        expect(new Router)->toBeInstanceOf(Router::class);
-
+        test("__construct", function () {
+            expect(new Router)->toBeInstanceOf(Router::class);
+        });
     });
 
     //. handle --------------------------------------------------------------------------
-    test("handle", function ($argv, $target, $conditions) {
+    describe("handle", function () {
 
-        array_walk($conditions, fn($rule) => fulfill($rule));
+        test("handle", function ($argv, $target, $conditions) {
 
-        exec("./{$argv[0]} {$argv[0]}", $output, $result_code);
-        expect($result_code)->toBe(0);
+            array_walk($conditions, fn($rule) => fulfill($rule));
 
-    })->with("routes");
+            exec("./{$argv[0]} {$argv[0]}", $output, $result_code);
+            expect($result_code)->toBe(0);
+
+        })->with("routes");
+    });
 
     //. resolve -------------------------------------------------------------------------
-    test("resolve", function ($argv, $target, $conditions) {
+    describe("resolve", function () {
 
-        $result = reflect(
-            class: Router::class,
-            invoke: ["resolve", $argv],
-            gets: ["cmd"],
-        );
+        test("resolve", function ($argv, $target, $conditions) {
 
-        expect($result["cmd"])->toEqual($target);
+            $result = reflect(
+                class: Router::class,
+                invoke: ["resolve", $argv],
+                gets: ["cmd"],
+            );
 
-    })->with("routes");
+            expect($result["cmd"])->toEqual($target);
+
+        })->with("routes");
+    });
 
     //. middleware ----------------------------------------------------------------------
     describe("middleware", function () {
@@ -106,5 +113,7 @@ describe("Router", function () {
     });
 
     //. execute -------------------------------------------------------------------------
-    test("execute", function () { })->skip(message: "Barely testable void fn");
+    describe("execute", function () {
+        test("execute", function () { })->skip(message: "Barely testable void fn");
+    });
 });
