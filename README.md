@@ -1,4 +1,6 @@
-<pre>
+<pre style="background: -webkit-linear-gradient(#eee, #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent">
                           __                                         
                          /\ \                                        
                          \ \ \____     __      ___   __  __  _____   
