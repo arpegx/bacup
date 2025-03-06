@@ -1,5 +1,8 @@
 <?php
 
+use Arpegx\Bacup\Routing\Rules;
+use Arpgex\Bacup\Model\Configuration;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -39,7 +42,84 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ *. Reflection Helper
+ * @param string $class
+ * @param array $set
+ * @param array $invoke {string function, mixed param}
+ * @param array $gets
+ * @return array
+ */
+function reflect(string $class, array $set = [], array $invoke = [], array $gets = [])
 {
-    // ..
+    $_class = new $class();
+    $reflection = new ReflectionClass($class);
+
+    array_walk($set, function ($value, $key) use ($reflection, $_class) {
+        $property = $reflection->getProperty($key);
+        $property->setAccessible(true);
+        $property->setValue($_class, $value);
+    });
+
+    if (!empty($invoke)) {
+        $method = $reflection->getMethod($invoke[0]);
+
+        sizeof($invoke) == 2
+            ? $method->invokeArgs($_class, [$invoke[1]])
+            : $method->invoke($_class);
+    }
+
+    $result = array();
+    foreach ($gets as $get) {
+        $property = $reflection->getProperty($get);
+        $property->setAccessible(true);
+        $result[$get] = $property->getValue($_class);
+    }
+
+    return $result;
+}
+
+/**
+ *. delete config diretory
+ * @return void
+ */
+function uninitialize()
+{
+    if (file_exists($_ENV["HOME"] . "/.config/bacup")) {
+        system("rm -rf " . $_ENV["HOME"] . "/.config/bacup");
+    }
+}
+
+/**
+ *. create cirumstances to fulfill a given rule
+ * @param string $rule
+ * @return void
+ */
+function fulfill(string $rule)
+{
+    switch ($rule) {
+        case Rules::INIT:
+            Configuration::getInstance()->create()->save();
+            break;
+        case Rules::NO_INIT:
+            uninitialize();
+            break;
+    }
+}
+
+/**
+ *. create circumstances to fail a given rule
+ * @param string $rule
+ * @return void
+ */
+function fail(string $rule)
+{
+    switch ($rule) {
+        case Rules::INIT:
+            uninitialize();
+            break;
+        case Rules::NO_INIT:
+            Configuration::getInstance()->create()->save();
+            break;
+    }
 }
