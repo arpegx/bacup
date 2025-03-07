@@ -2,6 +2,8 @@
 
 namespace Arpegx\Bacup\Command;
 
+use Arpegx\Bacup\Model\View;
+use function Termwind\render;
 
 class Help extends Command
 {
@@ -13,6 +15,11 @@ class Help extends Command
     #[\Override]
     public static function handle(array $argv)
     {
-        print __METHOD__ . PHP_EOL;
+        render(
+            View::make("help", [
+                "test" => "templated string",
+                "version" => "YY.mm.release",
+            ])
+        );
     }
 }
