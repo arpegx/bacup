@@ -11,10 +11,13 @@ class View
         $file = realpath(self::$views . $view . ".html");
         $content = file_get_contents($file);
 
+        $output = $content;
         foreach ($data as $key => $value) {
-            $output = str_replace("{\${$key}}", $value, $content);
+            $output = str_replace("{\${$key}}", $value, $output);
         }
 
-        return $output;
+        $banner = file_get_contents(realpath(self::$views . "banner.html"));
+
+        return "<div>" . $banner . $output . "</div>";
     }
 }
