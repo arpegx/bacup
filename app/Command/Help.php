@@ -18,7 +18,7 @@ class Help extends Command
         render(
             View::make("help", [
                 "test" => "templated string",
-                "version" => "YY.mm.release",
+                "version" => "0.01",
             ])
         );
     }
