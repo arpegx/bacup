@@ -10,6 +10,15 @@ class View
 
     public static function make(string $view, array $data = [])
     {
+        /**
+         * Do ...
+         * check for variables (data, ? unique)
+         * check for templates
+         * check for base views
+         * ? builder pattern
+         * ? return View::object
+         */
+
         //. source view
         Assert::fileExists(self::$views . $view . ".html", "View %s does not exist");
         $file = realpath(self::$views . $view . ".html");
@@ -28,7 +37,7 @@ class View
 
             array_walk($templates, function (&$template) use (&$output) {
 
-                Assert::fileExists(self::$views . $template . ".html", "Template file is not existing.");
+                Assert::fileExists(self::$views . $template . ".html", "Template %s is not existing.");
                 $output = str_replace(
                     "@template(\"" . $template . "\")",
                     file_get_contents(self::$views . $template . ".html"),
