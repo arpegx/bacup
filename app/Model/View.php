@@ -2,15 +2,18 @@
 
 namespace Arpegx\Bacup\Model;
 
+use Webmozart\Assert\Assert;
+
 class View
 {
     private static string $views = "./app/View/";
 
     public static function make(string $view, array $data = [])
     {
-
         //. source view
+        Assert::fileExists(self::$views . $view . ".html", "View %s does not exist");
         $file = realpath(self::$views . $view . ".html");
+
         $output = file_get_contents($file);
 
         //. templates
@@ -25,6 +28,7 @@ class View
 
             array_walk($templates, function (&$template) use (&$output) {
 
+                Assert::fileExists(self::$views . $template . ".html", "Template file is not existing.");
                 $output = str_replace(
                     "@template(\"" . $template . "\")",
                     file_get_contents(self::$views . $template . ".html"),
