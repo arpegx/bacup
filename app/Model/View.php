@@ -14,7 +14,7 @@ class View
          * Do ...
          * check for variables (data, ? unique)
          * check for templates
-         * check for base views
+         * check for base views ( allow no infinite loop ? )
          * ? builder pattern
          * ? return View::object
          */
