@@ -4,5 +4,20 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Arpegx\Bacup\Routing\Router;
+use Arpegx\Bacup\Model\View;
+use function Termwind\render;
 
-(new Router())->handle($argv);
+$status_code = 0;
+
+try {
+    render(View::make("banner", ["version" => "v0.01"]));
+    (new Router())->handle($argv);
+
+} catch (\Exception $e) {
+    render(View::make("exception", ["message" => $e->getMessage()]));
+    $status_code = 1;
+
+} finally {
+    render(View::make("footer"));
+    exit($status_code);
+}

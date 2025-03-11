@@ -5,9 +5,8 @@ namespace Arpegx\Bacup\Routing;
 use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
-use Arpegx\Bacup\Model\View;
 use Webmozart\Assert\Assert;
-use function Termwind\render;
+
 
 class Router
 {
@@ -35,16 +34,10 @@ class Router
      */
     public function handle(array $argv)
     {
-        try {
-            $this
-                ->resolve($argv)
-                ->middleware()
-                ->execute();
-
-        } catch (\Exception $e) {
-            render(View::make("exception", ["message" => $e->getMessage()]));
-            exit(1);
-        }
+        $this
+            ->resolve($argv)
+            ->middleware()
+            ->execute();
     }
 
     /**
