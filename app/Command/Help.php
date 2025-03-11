@@ -16,9 +16,7 @@ class Help extends Command
     public static function handle(array $argv)
     {
         render(
-            View::make("help", [
-                "test" => "templated string",
-            ])
+            View::make("help")
         );
     }
 }

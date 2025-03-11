@@ -10,7 +10,7 @@ use function Termwind\render;
 $status_code = 0;
 
 try {
-    render(View::make("banner", ["version" => "v0.01"]));
+    render(View::make("banner"));
     (new Router())->handle($argv);
 
 } catch (\Exception $e) {
@@ -18,6 +18,6 @@ try {
     $status_code = 1;
 
 } finally {
-    render(View::make("footer"));
+    render(View::make("footer", ["version" => "v0.01"]));
     exit($status_code);
 }

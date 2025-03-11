@@ -26,6 +26,10 @@ class Router
      */
     private string $cmd = Help::class;
 
+    /**
+     *. optional parameters for commands
+     * @var array
+     */
     private array $params = array();
 
     /**
