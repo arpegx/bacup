@@ -9,6 +9,11 @@ class IO
 {
     private static string $views = "./app/View/";
 
+    public static function render(string $view, array $data = [])
+    {
+        render(IO::make($view, $data));
+    }
+
     public static function make(string $view, array $data = [])
     {
         /**
@@ -21,12 +26,29 @@ class IO
          */
 
         //. source view
+        $output = self::source($view);
+
+        //. templates
+        $output = self::template($output);
+
+        //. dynamic content
+        $output = self::datalize($output, $data);
+
+        //. result
+        return $output;
+    }
+
+    private static function source(string $view)
+    {
+        //. source view
         Assert::fileExists(self::$views . $view . ".html", "View %s does not exist");
         $file = realpath(self::$views . $view . ".html");
 
-        $output = file_get_contents($file);
+        return file_get_contents($file);
+    }
 
-        //. templates
+    private static function template(string $output)
+    {
         if (str_contains($output, "@template")) {
 
             preg_match_all('/@template\("[a-z]+"\)/', $output, $matches);
@@ -46,18 +68,14 @@ class IO
                 );
             });
         }
-
-        //. dynamic content
-        foreach ($data as $key => $value) {
-            $output = str_replace("{\${$key}}", $value, $output);
-        }
-
-        //. result
         return $output;
     }
 
-    public static function render(string $view, array $data = [])
+    private static function datalize(string $output, array $data)
     {
-        render(IO::make($view, $data));
+        foreach ($data as $key => $value) {
+            $output = str_replace("{\${$key}}", $value, $output);
+        }
+        return $output;
     }
 }
