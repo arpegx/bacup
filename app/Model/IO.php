@@ -3,8 +3,9 @@
 namespace Arpegx\Bacup\Model;
 
 use Webmozart\Assert\Assert;
+use function Termwind\render;
 
-class View
+class IO
 {
     private static string $views = "./app/View/";
 
@@ -53,5 +54,10 @@ class View
 
         //. result
         return $output;
+    }
+
+    public static function render(string $view, array $data = [])
+    {
+        render(IO::make($view, $data));
     }
 }
