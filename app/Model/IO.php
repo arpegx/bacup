@@ -9,11 +9,23 @@ class IO
 {
     private static string $views = "./app/View/";
 
+    /**
+     *. display view
+     * @param string $view
+     * @param array $data
+     * @return void
+     */
     public static function render(string $view, array $data = [])
     {
         render(IO::make($view, $data));
     }
 
+    /**
+     *. prepare view
+     * @param string $view
+     * @param array $data
+     * @return string
+     */
     public static function make(string $view, array $data = [])
     {
         /**
@@ -25,57 +37,70 @@ class IO
          * ? return View::object
          */
 
-        //. source view
-        $output = self::source($view);
+        $rawHTML = self::source($view);
 
-        //. templates
-        $output = self::template($output);
+        $templatedHTML = self::template($rawHTML);
 
-        //. dynamic content
-        $output = self::datalize($output, $data);
+        $output = self::datalize($templatedHTML, $data);
 
-        //. result
         return $output;
     }
 
+    /**
+     *. source html file
+     * @param string $view
+     * @throws \Webmozart\Assert\InvalidArgumentException
+     * @return bool|string
+     */
     private static function source(string $view)
     {
-        //. source view
         Assert::fileExists(self::$views . $view . ".html", "View %s does not exist");
         $file = realpath(self::$views . $view . ".html");
 
         return file_get_contents($file);
     }
 
-    private static function template(string $output)
+    /**
+     *. replace template slots
+     * @param string $html
+     * @throws \Webmozart\Assert\InvalidArgumentException
+     * @return string
+     */
+    private static function template(string $html)
     {
-        if (str_contains($output, "@template")) {
+        if (str_contains($html, "@template")) {
 
-            preg_match_all('/@template\("[a-z]+"\)/', $output, $matches);
+            preg_match_all('/@template\("[a-z]+"\)/', $html, $matches);
 
             $templates = array_map(
                 fn($match) => sscanf($match, '@template(" %[a-z]')[0],
                 $matches[0]
             );
 
-            array_walk($templates, function (&$template) use (&$output) {
+            array_walk($templates, function (&$template) use (&$html) {
 
                 Assert::fileExists(self::$views . $template . ".html", "Template %s is not existing.");
-                $output = str_replace(
+                $html = str_replace(
                     "@template(\"" . $template . "\")",
                     file_get_contents(self::$views . $template . ".html"),
-                    $output
+                    $html
                 );
             });
         }
-        return $output;
+        return $html;
     }
 
-    private static function datalize(string $output, array $data)
+    /**
+     *. replace variable slots
+     * @param string $html
+     * @param array $data
+     * @return string
+     */
+    private static function datalize(string $html, array $data)
     {
         foreach ($data as $key => $value) {
-            $output = str_replace("{\${$key}}", $value, $output);
+            $html = str_replace("{\${$key}}", $value, $html);
         }
-        return $output;
+        return $html;
     }
 }
