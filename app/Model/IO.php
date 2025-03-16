@@ -89,7 +89,7 @@ class IO
     private static function datalize(string $html, array $data)
     {
         foreach ($data as $key => $value) {
-            $html = str_replace("{\${$key}}", $value, $html);
+            $html = str_replace("{\${$key}}", (string) $value, $html);
         }
         return $html;
     }
