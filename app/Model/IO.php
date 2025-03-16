@@ -28,19 +28,8 @@ class IO
      */
     public static function make(string $view, array $data = [])
     {
-        /**
-         * Do ...
-         * check for variables (data, ? unique)
-         * check for templates
-         * check for base views ( allow no infinite loop ? )
-         * ? builder pattern
-         * ? return View::object
-         */
-
         $rawHTML = self::source($view);
-
         $templatedHTML = self::template($rawHTML);
-
         $output = self::datalize($templatedHTML, $data);
 
         return $output;
@@ -50,14 +39,15 @@ class IO
      *. source html file
      * @param string $view
      * @throws \Webmozart\Assert\InvalidArgumentException
-     * @return bool|string
+     * @return string
      */
     private static function source(string $view)
     {
-        Assert::fileExists(self::$views . $view . ".html", "View %s does not exist");
-        $file = realpath(self::$views . $view . ".html");
+        Assert::fileExists($_view = self::$views . $view . ".html", "View %s does not exist");
 
-        return file_get_contents($file);
+        return file_get_contents(
+            realpath($_view)
+        );
     }
 
     /**
@@ -79,10 +69,10 @@ class IO
 
             array_walk($templates, function (&$template) use (&$html) {
 
-                Assert::fileExists(self::$views . $template . ".html", "Template %s is not existing.");
+                Assert::fileExists($_view = self::$views . $template . ".html", "Template %s is not existing.");
                 $html = str_replace(
                     "@template(\"" . $template . "\")",
-                    file_get_contents(self::$views . $template . ".html"),
+                    file_get_contents(realpath($_view)),
                     $html
                 );
             });
