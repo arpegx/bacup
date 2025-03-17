@@ -65,7 +65,7 @@ function reflect(string $class, array $set = [], array $invoke = [], array $gets
         $method = $reflection->getMethod($invoke[0]);
 
         $m_result = sizeof($invoke) == 2
-            ? $method->invokeArgs($_class, [$invoke[1]])
+            ? $method->invokeArgs($_class, [...$invoke[1]])
             : $method->invoke($_class);
 
         if (empty($gets))

@@ -62,7 +62,7 @@ describe("Router", function () {
 
             $result = reflect(
                 class: Router::class,
-                invoke: ["resolve", $argv],
+                invoke: ["resolve", [$argv]],
                 gets: ["cmd"],
             );
 
@@ -110,10 +110,5 @@ describe("Router", function () {
                 invoke: ["middleware"]
             );
         })->with("routes")->throwsNoExceptions();
-    });
-
-    //. execute -------------------------------------------------------------------------
-    describe("execute", function () {
-        test("execute", function () { })->skip(message: "Barely testable void fn");
     });
 });
