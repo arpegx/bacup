@@ -51,8 +51,10 @@ class Router
     private function resolve(array $argv)
     {
         switch (true) {
+            // check the command
             case sizeof($argv) >= 2:
                 $this->cmd = key_exists($argv[1], $this->routes) ? $this->routes[$argv[1]] : Help::class;
+            // extract editional parameters
             case sizeof($argv) >= 3:
                 $this->params = array_slice($argv, 2);
                 break;
