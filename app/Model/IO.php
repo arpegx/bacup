@@ -39,7 +39,7 @@ class IO
      *. source html file
      * @param string $view
      * @throws \Webmozart\Assert\InvalidArgumentException
-     * @return string
+     * @return string|bool
      */
     private static function source(string $view)
     {
