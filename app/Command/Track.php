@@ -6,6 +6,8 @@ use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
 
 use function Laravel\Prompts\form;
+use function Laravel\Prompts\info;
+use function Laravel\Prompts\note;
 
 class Track extends Command
 {
@@ -26,6 +28,8 @@ class Track extends Command
     #[\Override]
     public static function handle(array $argv)
     {
+        note("Tracking");
+
         $input = form()
             ->text(
                 "File/Directory:",
@@ -36,8 +40,6 @@ class Track extends Command
                 )
             ->confirm("Confirm tracking ?", name: "confirm")
             ->submit();
-
-        // print_r($input);
             
         if($input["confirm"]){
 
@@ -45,6 +47,8 @@ class Track extends Command
                 ->add($input)
                 ->save();
         }
+
+        info("{$input["path"]} successfully added.");
 
         // print(file_get_contents($_ENV["HOME"]."/.config/bacup/config.xml"));
     }
