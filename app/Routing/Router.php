@@ -7,6 +7,7 @@ use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
 use Webmozart\Assert\Assert;
 
+
 class Router
 {
     /**
@@ -25,6 +26,10 @@ class Router
      */
     private string $cmd = Help::class;
 
+    /**
+     *. optional parameters for commands
+     * @var array
+     */
     private array $params = array();
 
     /**
@@ -33,16 +38,10 @@ class Router
      */
     public function handle(array $argv)
     {
-        try {
-            $this
-                ->resolve($argv)
-                ->middleware()
-                ->execute();
-
-        } catch (\Exception $e) {
-            print $e->getMessage();
-            exit(1);
-        }
+        $this
+            ->resolve($argv)
+            ->middleware()
+            ->execute();
     }
 
     /**
@@ -52,8 +51,10 @@ class Router
     private function resolve(array $argv)
     {
         switch (true) {
+            // check the command
             case sizeof($argv) >= 2:
                 $this->cmd = key_exists($argv[1], $this->routes) ? $this->routes[$argv[1]] : Help::class;
+            // extract editional parameters
             case sizeof($argv) >= 3:
                 $this->params = array_slice($argv, 2);
                 break;

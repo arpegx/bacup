@@ -1,4 +1,6 @@
 <?php declare(strict_types=1);
+/** @suppress PHP0406 */ // Argument '1' passed to with() is expected to be of type array, string given
+
 use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
@@ -40,12 +42,13 @@ describe("Router", function () {
         test("__construct", function () {
             expect(new Router)->toBeInstanceOf(Router::class);
         });
+
     });
 
     //. handle --------------------------------------------------------------------------
     describe("handle", function () {
 
-        test("handle", function ($argv, $target, $conditions) {
+        test("validation", function ($argv, $target, $conditions) {
 
             array_walk($conditions, fn($rule) => fulfill($rule));
 
@@ -53,22 +56,24 @@ describe("Router", function () {
             expect($result_code)->toBe(0);
 
         })->with("routes");
+
     });
 
     //. resolve -------------------------------------------------------------------------
     describe("resolve", function () {
 
-        test("resolve", function ($argv, $target, $conditions) {
+        test("validation", function ($argv, $target, $conditions) {
 
             $result = reflect(
                 class: Router::class,
-                invoke: ["resolve", $argv],
+                invoke: ["resolve", [$argv]],
                 gets: ["cmd"],
             );
 
             expect($result["cmd"])->toEqual($target);
 
         })->with("routes");
+
     });
 
     //. middleware ----------------------------------------------------------------------
@@ -110,10 +115,6 @@ describe("Router", function () {
                 invoke: ["middleware"]
             );
         })->with("routes")->throwsNoExceptions();
-    });
 
-    //. execute -------------------------------------------------------------------------
-    describe("execute", function () {
-        test("execute", function () { })->skip(message: "Barely testable void fn");
     });
 });
