@@ -18,9 +18,8 @@
     <!-- ITEM -->
     <xs:complexType name="_item">
         <xs:sequence>
-            <xs:element name="group" minOccurs="1" maxOccurs="1" type="xs:string" />
             <xs:element name="source" minOccurs="1" maxOccurs="1" type="xs:string" />
-            <xs:element name="destination" minOccurs="1" maxOccurs="1" type="xs:string" />
         </xs:sequence>
+        <xs:attribute name="id" type="xs:string" />
     </xs:complexType>
 </xs:schema>
