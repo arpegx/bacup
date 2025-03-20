@@ -2,6 +2,7 @@
 
 namespace Arpegx\Bacup\Command;
 
+use Arpegx\Bacup\Model\IO;
 
 class Help extends Command
 {
@@ -13,6 +14,6 @@ class Help extends Command
     #[\Override]
     public static function handle(array $argv)
     {
-        print __METHOD__ . PHP_EOL;
+        IO::render("help");
     }
 }
