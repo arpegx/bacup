@@ -3,6 +3,7 @@
 namespace Arpegx\Bacup\Command;
 
 use Arpegx\Bacup\Routing\Rules;
+use function Laravel\Prompts\form;
 
 class Track extends Command
 {
@@ -23,6 +24,9 @@ class Track extends Command
     #[\Override]
     public static function handle(array $argv)
     {
-        print __METHOD__ . PHP_EOL;
+        $input = form()
+            ->text("Path: ", required: true)
+            ->confirm("Do you want to track this file ?")
+            ->submit();
     }
 }
