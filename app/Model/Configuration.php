@@ -93,7 +93,7 @@ class Configuration
         $item = $this->configuration->createElementNS(qualifiedName: "item", namespace:"https://www.arpegx.com");
         $item->setAttribute('id', uniqid());
 
-        $source = $this->configuration->createElementNS(qualifiedName: "source", value:$data["path"], namespace:"https://www.arpegx.com");
+        $source = $this->configuration->createElementNS(qualifiedName: "source", value:$data["target"], namespace:"https://www.arpegx.com");
         
         $item->appendChild($source);
 

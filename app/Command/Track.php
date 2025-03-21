@@ -5,9 +5,11 @@ namespace Arpegx\Bacup\Command;
 use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
 
+use function Arpegx\Bacup\Helper\validate;
 use function Laravel\Prompts\form;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\note;
+use function Laravel\Prompts\outro;
 
 class Track extends Command
 {
@@ -28,28 +30,44 @@ class Track extends Command
     #[\Override]
     public static function handle(array $argv)
     {
-        note("Tracking");
+        if(empty($argv)){
 
-        $input = form()
+            note("Tracking");
+            
+            $input = form()
             ->text(
                 "File/Directory:",
                 required: true,
                 transform: fn($value) => realpath($value),
                 validate:  fn($value) => file_exists($value) ? null : "Source {$value} doesnt exists",
-                name: "path"
+                name: "target"
                 )
             ->confirm("Confirm tracking ?", name: "confirm")
             ->submit();
             
-        if($input["confirm"]){
-
-            Configuration::getInstance()
+            if($input["confirm"]){
+                
+                Configuration::getInstance()
                 ->add($input)
                 ->save();
+            }
+        } else {
+            self::resolve($argv);
         }
-
-        info("{$input["path"]} successfully added.");
-
+        
+        // info();
+        outro("{$input["path"]} successfully added.");
         // print(file_get_contents($_ENV["HOME"]."/.config/bacup/config.xml"));
+    }
+
+    public static function resolve($argv){
+            $argv = ["target" => $argv[0]];
+
+            // print_r($argv);
+            $validated = validate($argv, [
+                "target" => Rules::EXISTS,
+            ]);
+
+            var_dump($validated);
     }
 }

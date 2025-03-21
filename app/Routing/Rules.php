@@ -8,6 +8,7 @@ class Rules
 {
     const INIT = "init";
     const NO_INIT = "no_init";
+    const EXISTS = "exists";
 
     /**
      *. checks for configuration to be existent
@@ -30,6 +31,13 @@ class Rules
         return [
             "result" => !(self::init()["result"]),
             "message" => "Configuration does already exists",
+        ];
+    }
+
+    public static function exists(string $file){
+        return [
+            "result" => file_exists($file),
+            "message" => "File does not exist",
         ];
     }
 }

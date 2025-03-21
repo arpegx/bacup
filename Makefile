@@ -3,7 +3,7 @@ image = arpegx/bacup:latest
 oci = oci_bacup
 phar = build/bacup.phar
 extract_dir = build/extract
-command = "rm -rf ~/.config/bacup && ./bacup init 2>&1 > /dev/null && ./bacup track"
+command = "rm -rf ~/.config/bacup && ./bacup init 2>&1 > /dev/null && ./bacup track xy"
 
 .PHONY: build run ssh update test release clean
 
