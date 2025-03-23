@@ -4,6 +4,7 @@ namespace Arpegx\Bacup\Command;
 
 use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
+use Webmozart\Assert\Assert;
 
 use function Arpegx\Bacup\Helper\validate;
 use function Laravel\Prompts\form;
@@ -22,6 +23,11 @@ class Track extends Command
         Rules::INIT,
     ];
 
+    protected static array $parameter = [
+        "target",
+        "encrypt",
+    ];
+
     /**
      *. track files
      * @param array $argv
@@ -30,8 +36,11 @@ class Track extends Command
     #[\Override]
     public static function handle(array $argv)
     {
-        if(empty($argv)){
+        //. input handling --------------------------------------------------------------------------------------------------
+        $input = array();
 
+        if(empty($argv)){
+            //. manual user input
             note("Tracking");
             
             $input = form()
@@ -39,35 +48,50 @@ class Track extends Command
                 "File/Directory:",
                 required: true,
                 transform: fn($value) => realpath($value),
-                validate:  fn($value) => file_exists($value) ? null : "Source {$value} doesnt exists",
+                validate:  fn($value) => Rules::exists($value)["result"] ? null : "Source {$value} doesnt exists",
                 name: "target"
                 )
             ->confirm("Confirm tracking ?", name: "confirm")
             ->submit();
             
-            if($input["confirm"]){
-                
-                Configuration::getInstance()
-                ->add($input)
-                ->save();
+            if(!$input["confirm"]){ 
+                outro("Tracking canceled."); 
+                return;
             }
+
         } else {
-            self::resolve($argv);
+            //. scriptable call
+            $input = self::resolve($argv);
         }
+
+        //. Validation ------------------------------------------------------------------------------------------
+        validate($input, [
+            "target" => Rules::EXISTS,
+        ]);
         
-        // info();
-        outro("{$input["path"]} successfully added.");
-        // print(file_get_contents($_ENV["HOME"]."/.config/bacup/config.xml"));
+        //. do the thing ------------------------------------------------------------------------------------------
+        Configuration::getInstance()
+            ->add($input)
+            ->save();
+
+        //. outro --------------------------------------------------------------------------------------------------------------------
+        outro("{$input["target"]} successfully added.");
     }
 
     public static function resolve($argv){
-            $argv = ["target" => $argv[0]];
+            $params = array();
 
-            // print_r($argv);
-            $validated = validate($argv, [
-                "target" => Rules::EXISTS,
-            ]);
+            // substrings
+            array_walk($argv, function($value) use (&$params){
+                Assert::contains($value, "=", "Illegal format.");
+                $param = explode("=",$value);
+                $params[$param[0]] = $param[1];
+            });
 
-            var_dump($validated);
+            // transform
+            Assert::keyExists($params, "target", "Target missing");
+            $params["target"] = realpath($params["target"]);
+
+            return $params;
     }
 }
