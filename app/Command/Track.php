@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Arpegx\Bacup\Command;
 
+use Arpegx\Bacup\Model\IO;
 use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
 use Webmozart\Assert\Assert;
-
 use function Arpegx\Bacup\Helper\validate;
 use function Laravel\Prompts\form;
 use function Laravel\Prompts\note;
-use function Laravel\Prompts\outro;
 
 class Track extends Command
 {
@@ -32,7 +31,7 @@ class Track extends Command
     /**
      *. track files
      * @param array $argv
-     * @return void
+     * @return void 
      */
     #[\Override]
     public static function handle(array $argv)
@@ -42,14 +41,10 @@ class Track extends Command
             ? self::request()
             : self::resolve($argv);
 
-        if (!$input["confirm"]) {
-            outro("Tracking canceled.");
-            return;
-        }
-
         //. Validation ----------------------------------------------------------------------------
         validate($input, [
-            "target" => Rules::EXISTS,
+            "target" =>     [Rules::EXISTS, Rules::REQUIRED],
+            "confirm" =>    [Rules::REQUIRED],
         ]);
 
         //. do the thing --------------------------------------------------------------------------
@@ -57,8 +52,8 @@ class Track extends Command
             ->add($input)
             ->save();
 
-        //. outro ---------------------------------------------------------------------------------
-        outro("{$input["target"]} successfully added.");
+        //. view ---------------------------------------------------------------------------------
+        IO::render("Track/result", $input);
     }
 
     public static function request()
@@ -93,7 +88,7 @@ class Track extends Command
         Assert::keyExists($params, "target", "Target missing");
         $params["target"] = realpath($params["target"]);
 
-        $params["confirmed"] = true;
+        $params["confirm"] = "true";
 
         return $params;
     }

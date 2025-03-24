@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Arpegx\Bacup\Routing;
 
@@ -9,6 +11,7 @@ class Rules
     const INIT = "init";
     const NO_INIT = "no_init";
     const EXISTS = "exists";
+    const REQUIRED = "required";
 
     /**
      *. checks for configuration to be existent
@@ -34,10 +37,19 @@ class Rules
         ];
     }
 
-    public static function exists(string $file){
+    public static function exists(string $file)
+    {
         return [
             "result" => file_exists($file),
             "message" => "File does not exist",
+        ];
+    }
+
+    public static function required(string $key, array $array)
+    {
+        return [
+            "result" => array_key_exists($key, $array),
+            "message" => "{$key} is required",
         ];
     }
 }

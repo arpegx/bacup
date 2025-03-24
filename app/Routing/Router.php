@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Arpegx\Bacup\Routing;
 
@@ -54,7 +56,7 @@ class Router
             // check the command
             case sizeof($argv) >= 2:
                 $this->cmd = key_exists($argv[1], $this->routes) ? $this->routes[$argv[1]] : Help::class;
-            // extract editional parameters
+                // extract editional parameters
             case sizeof($argv) >= 3:
                 $this->params = array_slice($argv, 2);
                 break;
@@ -76,7 +78,6 @@ class Router
 
             extract(call_user_func([Rules::class, $rule]));
             Assert::notFalse($result, $message);
-
         }, $this->cmd::middleware());
 
         return $this;

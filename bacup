@@ -1,5 +1,7 @@
 #!/usr/bin/env php
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -11,11 +13,9 @@ $status_code = 0;
 try {
     IO::render("banner");
     (new Router())->handle($argv);
-
 } catch (\Exception $e) {
     IO::render("exception", ["message" => $e->getMessage()]);
     $status_code = 1;
-
 } finally {
     IO::render("footer", ["version" => "v0.01"]);
     exit($status_code);
