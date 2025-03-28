@@ -10,7 +10,6 @@ use Arpgex\Bacup\Model\Configuration;
 use Webmozart\Assert\Assert;
 use function Arpegx\Bacup\Helper\validate;
 use function Laravel\Prompts\form;
-use function Laravel\Prompts\note;
 
 class Track extends Command
 {
@@ -58,9 +57,6 @@ class Track extends Command
 
     public static function request()
     {
-        //. manual user input
-        note("Tracking");
-
         return form()
             ->text(
                 "File/Directory:",
