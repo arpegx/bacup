@@ -22,11 +22,6 @@ class Track extends Command
         Rules::INIT,
     ];
 
-    protected static array $parameter = [
-        "target",
-        "encrypt",
-    ];
-
     /**
      *. track files
      * @param array $argv
@@ -71,20 +66,19 @@ class Track extends Command
 
     public static function resolve($argv)
     {
-        $params = array();
-
-        // substrings
-        array_walk($argv, function ($value) use (&$params) {
-            Assert::contains($value, "=", "Illegal format.");
-            $param = explode("=", $value);
-            $params[$param[0]] = $param[1];
-        });
-
-        // transform
-        Assert::keyExists($params, "target", "Target missing");
-        $params["target"] = realpath($params["target"]);
-
         $params["confirm"] = "true";
+
+        foreach ($argv as $arg) {
+            switch (true) {
+                case str_starts_with($arg, "target"):
+                    Assert::regex($arg, '/^target=[^=]*$/');
+                    [$parameter, $value] = explode("=", $arg);
+                    $params[$parameter] = realpath(trim($value, "\""));
+                    break;
+                default:
+                    throw new \Exception("Unkown parameter");
+            };
+        }
 
         return $params;
     }
