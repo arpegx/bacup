@@ -15,7 +15,7 @@ class Rules
 
     /**
      *. checks for configuration to be existent
-     * @return array{result: bool, message: string}
+     * @return array{message: string, result: bool}
      */
     public static function init()
     {
@@ -27,7 +27,7 @@ class Rules
 
     /**
      *. checks for configuration to be non-existent
-     * @return array{result: bool, message: string}
+     * @return array{message: string, result: bool}
      */
     public static function no_init()
     {
@@ -37,18 +37,30 @@ class Rules
         ];
     }
 
-    public static function exists(string $file)
+    /**
+     *. checks if file exists
+     * @param array $data
+     * @param string|int $key
+     * @return array{message: string, result: bool}
+     */
+    public static function exists(array $data, string|int $key)
     {
         return [
-            "result" => file_exists($file),
+            "result" => file_exists($data[$key]),
             "message" => "File does not exist",
         ];
     }
 
-    public static function required(string $key, array $array)
+    /**
+     *. checks if key is mentioned in data
+     * @param array $data
+     * @param string $key
+     * @return array{message: string, result: bool}
+     */
+    public static function required(array $data, string $key)
     {
         return [
-            "result" => array_key_exists($key, $array),
+            "result" => array_key_exists($key, $data),
             "message" => "{$key} is required",
         ];
     }

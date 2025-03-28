@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Arpegx\Bacup\Helper;
 
 use Arpegx\Bacup\Routing\Rules;
+use ReflectionClass;
 use Webmozart\Assert\Assert;
 
 if (!function_exists(__NAMESPACE__ . '\validate')) {
-    function validate(array $data, array $rules)
+    function validate(array $data, array $subjects)
     {
-        //do refactor
-        foreach ($rules as $rule_key => $rule_values) {
-            for ($i = 0; $i < sizeof($rule_values); $i++) {
-                $result = array();
-                if ($rule_values[$i] == Rules::REQUIRED) {
-                    $result = call_user_func([Rules::class, $rule_values[$i]], $rule_key, $data);
-                } else {
-                    $result = call_user_func([Rules::class, $rule_values[$i]], $data[$rule_key]);
-                }
+        $checkables = (new ReflectionClass(Rules::class))->getConstants();
+
+        foreach ($subjects as $subject => $rules) {
+            foreach ($rules as $rule) {
+
+                Assert::inArray($rule, $checkables);
+
+                $result = call_user_func([Rules::class, $rule], $data, $subject);
                 Assert::true($result["result"], $result["message"]);
             }
         }

@@ -37,7 +37,7 @@ class Track extends Command
 
         //. Validation ----------------------------------------------------------------------------
         validate($input, [
-            "target" =>     [Rules::EXISTS, Rules::REQUIRED],
+            "target" =>     [Rules::REQUIRED, Rules::EXISTS],
             "confirm" =>    [Rules::REQUIRED],
         ]);
 
@@ -57,7 +57,7 @@ class Track extends Command
                 "File/Directory:",
                 required: true,
                 transform: fn($value) => realpath($value),
-                validate: fn($value) => Rules::exists($value)["result"] ? null : "Source {$value} doesnt exists",
+                validate: fn($value) => Rules::exists([$value], 0)["result"] ? null : "Source {$value} doesnt exists",
                 name: "target"
             )
             ->confirm("Confirm tracking ?", name: "confirm")
