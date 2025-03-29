@@ -30,26 +30,26 @@ class Track extends Command
     #[\Override]
     public static function handle(array $argv)
     {
-        //. input handling ------------------------------------------------------------------------
         $input = empty($argv)
             ? self::request()
             : self::resolve($argv);
 
-        //. Validation ----------------------------------------------------------------------------
         validate($input, [
             "target" =>     [Rules::REQUIRED, Rules::EXISTS],
             "confirm" =>    [Rules::REQUIRED],
         ]);
 
-        //. do the thing --------------------------------------------------------------------------
         Configuration::getInstance()
             ->add($input)
             ->save();
 
-        //. view ---------------------------------------------------------------------------------
         IO::render("Track/result", $input);
     }
 
+    /**
+     *. request manual user input
+     * @return array
+     */
     public static function request()
     {
         return form()
@@ -64,6 +64,13 @@ class Track extends Command
             ->submit();
     }
 
+    /**
+     *. resolve commandline parameters
+     * @param mixed $argv
+     * @throws \Exception
+     * @throws \Webmozart\Assert\InvalidArgumentException
+     * @return array<bool|string>
+     */
     public static function resolve($argv)
     {
         $params["confirm"] = "true";
