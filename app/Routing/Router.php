@@ -7,8 +7,6 @@ namespace Arpegx\Bacup\Routing;
 use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
-use Webmozart\Assert\Assert;
-
 
 class Router
 {
@@ -75,9 +73,7 @@ class Router
     private function middleware()
     {
         array_map(function ($rule) {
-
-            extract(call_user_func([Rules::class, $rule]));
-            Assert::notFalse($result, $message);
+            Rules::assert($rule);
         }, $this->cmd::middleware());
 
         return $this;

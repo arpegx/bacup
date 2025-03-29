@@ -70,11 +70,13 @@ class Track extends Command
 
         foreach ($argv as $arg) {
             switch (true) {
+
                 case str_starts_with($arg, "target"):
                     Assert::regex($arg, '/^target=[^=]*$/');
                     [$parameter, $value] = explode("=", $arg);
                     $params[$parameter] = realpath(trim($value, "\""));
                     break;
+
                 default:
                     throw new \Exception("Unkown parameter");
             };

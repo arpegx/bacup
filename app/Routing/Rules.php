@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Arpegx\Bacup\Routing;
 
 use Arpgex\Bacup\Model\Configuration;
+use ReflectionClass;
+use Webmozart\Assert\Assert;
 
 class Rules
 {
@@ -12,6 +14,28 @@ class Rules
     const NO_INIT = "no_init";
     const EXISTS = "exists";
     const REQUIRED = "required";
+
+    /**
+     *. call rule while asserting success
+     * @param string $rule
+     * @param array $data
+     * @param string $key
+     * @throws \Webmozart\Assert\InvalidArgumentException
+     * @return void
+     */
+    public static function assert(string $rule, array $data = [], ?string $key = null)
+    {
+        Assert::inArray(
+            $rule,
+            (new ReflectionClass(Rules::class))->getConstants()
+        );
+
+        extract(
+            call_user_func([Rules::class, $rule], $data, $key)
+        );
+
+        Assert::true($result, $message);
+    }
 
     /**
      *. checks for configuration to be existent
