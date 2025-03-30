@@ -1,5 +1,7 @@
 #!/usr/bin/env php
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 // declare filesystem structure to be included
 $includes = [
@@ -45,7 +47,6 @@ try {
 
   // Save the archive
   $phar->stopBuffering();
-
 } catch (Exception $e) {
   echo 'Error: ' . $e->getMessage();
 }

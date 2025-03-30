@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Arpgex\Bacup\Model;
 
@@ -90,11 +92,11 @@ class Configuration
 
     public function add(array $data)
     {
-        $item = $this->configuration->createElementNS(qualifiedName: "item", namespace:"https://www.arpegx.com");
+        $item = $this->configuration->createElementNS(qualifiedName: "item", namespace: "https://www.arpegx.com");
         $item->setAttribute('id', uniqid());
 
-        $source = $this->configuration->createElementNS(qualifiedName: "source", value:$data["target"], namespace:"https://www.arpegx.com");
-        
+        $source = $this->configuration->createElementNS(qualifiedName: "source", value: $data["target"], namespace: "https://www.arpegx.com");
+
         $item->appendChild($source);
 
         $this->configuration->firstElementChild->insertBefore($item);
