@@ -50,9 +50,12 @@ expect()->extend('toBeOne', function () {
  * @param array $gets
  * @return array
  */
-function reflect(string $class, array $set = [], array $invoke = [], array $gets = [])
+function reflect(string|object $class, array $set = [], array $invoke = [], array $gets = [])
 {
-    $_class = new $class();
+    $_class = gettype($class) == "string"
+        ? new $class()
+        : $class;
+
     $reflection = new ReflectionClass($class);
 
     array_walk($set, function ($value, $key) use ($reflection, $_class) {
