@@ -3,7 +3,7 @@ image = arpegx/bacup:latest
 oci = oci_bacup
 phar = build/bacup.phar
 extract_dir = build/extract
-command = "./bacup help"
+command = 'rm -rf ~/.config/bacup && ./bacup init 2>&1 > /dev/null && ./bacup track target="app"'
 
 .PHONY: build run ssh update test release clean
 
@@ -17,14 +17,14 @@ ssh: update
 	@podman exec -it ${oci} bash;
 
 exec: update
-	@podman exec -t ${oci} bash -c ${command}
+	@podman exec -it ${oci} bash -c ${command}
 
 update: 
 	@podman exec -t ${oci} bash -c "rm -rf /usr/src/bacup/*" && \
 	podman cp . ${oci}:/usr/src/
 
 test: update
-	@podman exec -t ${oci} bash -c "./vendor/bin/pest --no-output --dont-report-useless-tests --coverage --profile"; \
+	@podman exec -t ${oci} bash -c "./vendor/bin/pest --no-output --dont-report-useless-tests --coverage --profile"
 
 release: run
 	podman exec ${oci} bash -c "./release && chmod u+x ${phar}"; \

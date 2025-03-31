@@ -1,5 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+
 /** @suppress PHP0406 */ // Argument '1' passed to with() is expected to be of type array, string given
+
+declare(strict_types=1);
 
 use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
@@ -42,7 +45,6 @@ describe("Router", function () {
         test("__construct", function () {
             expect(new Router)->toBeInstanceOf(Router::class);
         });
-
     });
 
     //. handle --------------------------------------------------------------------------
@@ -54,9 +56,7 @@ describe("Router", function () {
 
             exec("./{$argv[0]} {$argv[0]}", $output, $result_code);
             expect($result_code)->toBe(0);
-
         })->with("routes");
-
     });
 
     //. resolve -------------------------------------------------------------------------
@@ -71,9 +71,7 @@ describe("Router", function () {
             );
 
             expect($result["cmd"])->toEqual($target);
-
         })->with("routes");
-
     });
 
     //. middleware ----------------------------------------------------------------------
@@ -101,7 +99,6 @@ describe("Router", function () {
                     )->toThrow(\Webmozart\Assert\InvalidArgumentException::class);
 
                     $fail_on++;
-
                 } while ($fail_on < $stack);
             }
         })->with("routes");
@@ -115,6 +112,5 @@ describe("Router", function () {
                 invoke: ["middleware"]
             );
         })->with("routes")->throwsNoExceptions();
-
     });
 });
