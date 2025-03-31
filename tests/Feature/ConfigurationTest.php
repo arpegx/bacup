@@ -43,7 +43,7 @@ describe("Configuration", function () {
             );
 
             expect(($result["configuration"])->textContent)->toEqual("\n/usr/src/bacup/app");
-        })->todo("query for specific note");
+        });
     });
 
     //. save --------------------------------------------------------------------------------------

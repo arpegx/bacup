@@ -19,11 +19,11 @@ class Rules
      *. call rule while asserting success
      * @param string $rule
      * @param array $data
-     * @param string $key
+     * @param string|int $key
      * @throws \Webmozart\Assert\InvalidArgumentException
      * @return void
      */
-    public static function assert(string $rule, array $data = [], ?string $key = null)
+    public static function assert(string $rule, array $data = [], string|int $key = 0)
     {
         Assert::inArray(
             $rule,
@@ -67,7 +67,7 @@ class Rules
      * @param string|int $key
      * @return array{message: string, result: bool}
      */
-    public static function exists(array $data, string|int $key)
+    public static function exists(array $data, string|int $key = 0)
     {
         return [
             "result" => file_exists($data[$key]),
@@ -78,10 +78,10 @@ class Rules
     /**
      *. checks if key is mentioned in data
      * @param array $data
-     * @param string $key
+     * @param string|int $key
      * @return array{message: string, result: bool}
      */
-    public static function required(array $data, string $key)
+    public static function required(array $data, string|int $key = 0)
     {
         return [
             "result" => array_key_exists($key, $data),

@@ -3,6 +3,11 @@
 declare(strict_types=1);
 
 use Arpegx\Bacup\Command\Track;
+use Arpegx\Bacup\Routing\Rules;
+
+beforeEach(function () {
+    uninitialize();
+});
 
 describe("Track", function () {
 
@@ -13,6 +18,8 @@ describe("Track", function () {
         });
 
         test('Validaton', function () {
+            fulfill(Rules::INIT);
+
             // stdout isnt quiet catchable, therefore this semi-finished solution
             exec("./bacup track target=app", $output, $result);
             expect(implode($output))->toContain("/usr/src/bacup/app added");
@@ -22,6 +29,7 @@ describe("Track", function () {
     //. resolve -----------------------------------------------------------------------------------
     describe("resolve", function () {
         test("Validation", function () {
+            fulfill(Rules::INIT);
 
             expect(
                 reflect(
