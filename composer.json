@@ -6,7 +6,10 @@
     "autoload": {
         "psr-4": {
             "Arpegx\\Bacup\\": "app/"
-        }
+        },
+        "files": [
+            "app/Helper/validate.php"
+        ]
     },
     "authors": [
         {

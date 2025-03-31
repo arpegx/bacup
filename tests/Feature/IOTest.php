@@ -1,5 +1,8 @@
-<?php declare(strict_types=1);
+<?php
+
 /** @suppress PHP0406 */ // Argument '1' passed to with() is expected to be of type array, string given
+
+declare(strict_types=1);
 
 use Arpegx\Bacup\Model\IO;
 
@@ -31,7 +34,7 @@ dataset("views", [
 
 ]]
 ]);
-/** @formatter:on */ 
+/** @formatter:on */
 
 describe("IO", function () {
 
@@ -41,7 +44,6 @@ describe("IO", function () {
 		test("validation", function ($view) {
 			expect(IO::make($view["identifier"], $view["data"]))->toEqual($view["datalize"]);
 		})->with("views");
-
 	});
 
 	//. source ------------------------------------------------------------------------------------
@@ -51,7 +53,6 @@ describe("IO", function () {
 			expect(reflect(IO::class, invoke: ["source", [$view["identifier"]]]))
 				->toEqual($view["source"]);
 		})->with("views");
-
 	});
 
 	//. template ----------------------------------------------------------------------------------
@@ -61,7 +62,6 @@ describe("IO", function () {
 			expect(reflect(IO::class, invoke: ["template", [$view["template"]]]))
 				->toEqual($view["source"]);
 		})->with("views");
-
 	});
 
 	//. datalize ----------------------------------------------------------------------------------
@@ -74,6 +74,5 @@ describe("IO", function () {
 			);
 			expect($result)->toEqual($view["datalize"]);
 		})->with("views");
-
 	});
 });

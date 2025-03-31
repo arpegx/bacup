@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Arpgex\Bacup\Model;
 
@@ -84,6 +86,20 @@ class Configuration
     {
         mkdir($this->PATH, 0700, true);
         Assert::directory($this->PATH, "Failed to create directory " . $this->PATH);
+
+        return $this;
+    }
+
+    public function add(array $data)
+    {
+        $item = $this->configuration->createElementNS(qualifiedName: "item", namespace: "https://www.arpegx.com");
+        $item->setAttribute('id', uniqid());
+
+        $source = $this->configuration->createElementNS(qualifiedName: "source", value: $data["target"], namespace: "https://www.arpegx.com");
+
+        $item->appendChild($source);
+
+        $this->configuration->firstElementChild->insertBefore($item);
 
         return $this;
     }
