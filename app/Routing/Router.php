@@ -7,6 +7,7 @@ namespace Arpegx\Bacup\Routing;
 use Arpegx\Bacup\Command\Help;
 use Arpegx\Bacup\Command\Init;
 use Arpegx\Bacup\Command\Track;
+use Arpegx\Bacup\Command\Untrack;
 
 class Router
 {
@@ -18,6 +19,7 @@ class Router
         "help" => Help::class,
         "init" => Init::class,
         "track" => Track::class,
+        "untrack" => Untrack::class,
     ];
 
     /**
