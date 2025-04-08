@@ -1,4 +1,4 @@
-FROM php:8.2-cli
+FROM php:8.4-cli
 COPY . /usr/src/bacup
 WORKDIR /usr/src/bacup
 EXPOSE 9003

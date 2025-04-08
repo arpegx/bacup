@@ -13,7 +13,6 @@ class Init extends Command
      *. defines middleware
      * @var array
      */
-    #[\Override]
     protected static array $middleware = [
         Rules::NO_INIT,
     ];

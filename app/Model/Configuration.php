@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Arpgex\Bacup\Model;
 
+use DOMXPath;
 use Webmozart\Assert\Assert;
 
 class Configuration
@@ -19,6 +20,12 @@ class Configuration
      * @var \DOMDocument
      */
     private \DOMDocument $configuration;
+
+    /**
+     * Summary of xpath
+     * @var \DOMXPath
+     */
+    public DOMXPath $xpath;
 
     /**
      *. default xml to bootstrap the configuration
@@ -66,6 +73,13 @@ class Configuration
             'http://www.w3.org/2001/XMLSchema-instance',
             'bac:attr',
         );
+
+        // schema validation
+        Assert::true($this->configuration->schemaValidate(self::XSD_SCHEMA), "Invalid configuration format.");
+
+        // \DOMXpath
+        $this->xpath = new DOMXPath($this->configuration);
+        $this->xpath->registerNamespace("bac", "https://www.arpegx.com");
     }
 
     /**
@@ -96,8 +110,10 @@ class Configuration
         $item->setAttribute('id', uniqid());
 
         $source = $this->configuration->createElementNS(qualifiedName: "source", value: $data["target"], namespace: "https://www.arpegx.com");
-
         $item->appendChild($source);
+
+        $parameters = $this->configuration->createElementNS(qualifiedName: "parameters", value: "parameters", namespace: "https://www.arpegx.com");
+        $item->appendChild($parameters);
 
         $this->configuration->firstElementChild->insertBefore($item);
 
@@ -123,4 +139,38 @@ class Configuration
     {
         return file_exists($this->FILE);
     }
+
+    /**
+     *. Convert DOMNodeList into Array
+     * @param \DOMNodeList $list
+     * @param string|null $column filter option
+     * @return array converted DOMNodeList
+     */
+    public function toArray(?\DOMNodeList $list = null, ?string $column = null)
+    {
+        $list ??= $this->xpath->query('bac:item/bac:source | bac:item/bac:parameters');
+
+        $arr = array();
+
+        foreach ($list as $node) {
+            switch ($node->nodeName) {
+                case "item":
+                    foreach ($node->childNodes as $element) {
+                        $arr[$element->parentElement->id][$element->nodeName] = $element->nodeValue;
+                    }
+                    break;
+                default:
+                    $arr[$node->parentElement->id][$node->nodeName] = $node->nodeValue;
+                    break;
+            }
+        }
+
+        if ($column !== null) {
+            $arr = array_column($arr, $column);
+        }
+
+        return $arr;
+    }
+
+    public function remove() {}
 }

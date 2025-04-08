@@ -17,7 +17,6 @@ class Track extends Command
      *. defines middleware
      * @var array
      */
-    #[\Override]
     protected static array $middleware = [
         Rules::INIT,
     ];
@@ -36,7 +35,7 @@ class Track extends Command
 
         validate($input, [
             "target" =>     [Rules::REQUIRED, Rules::EXISTS],
-            "confirm" =>    [Rules::REQUIRED],
+            "confirm" =>    [Rules::REQUIRED], //do and true ??
         ]);
 
         Configuration::getInstance()

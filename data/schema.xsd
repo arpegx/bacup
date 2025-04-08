@@ -19,6 +19,7 @@
     <xs:complexType name="_item">
         <xs:sequence>
             <xs:element name="source" minOccurs="1" maxOccurs="1" type="xs:string" />
+            <xs:element name="parameters" minOccurs="0" maxOccurs="1" type="xs:string" />
         </xs:sequence>
         <xs:attribute name="id" type="xs:string" />
     </xs:complexType>
