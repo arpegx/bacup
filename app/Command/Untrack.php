@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Arpegx\Bacup\Command;
 
+use Arpegx\Bacup\Model\IO;
 use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
+
+use function Arpegx\Bacup\Helper\validate;
 use function Laravel\Prompts\form;
 
 class Untrack extends Command
@@ -29,8 +32,18 @@ class Untrack extends Command
         $input =  self::request();
 
         // validate
+        validate($input, [
+            "target" => [Rules::REQUIRED],
+            "confirm" => [Rules::REQUIRED]
+        ]);
+
         // remove
+        Configuration::getInstance()
+            ->remove($input["target"])
+            ->save();
+
         // render
+        IO::render("Untrack/result", $input);
     }
 
     private static function request()

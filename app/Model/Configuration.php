@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Arpgex\Bacup\Model;
 
+use DOMElement;
 use DOMXPath;
 use Webmozart\Assert\Assert;
 
@@ -92,6 +93,32 @@ class Configuration
     }
 
     /**
+     *. Convert DOMNodeList into Array
+     * @param \DOMNodeList $list
+     * @param string|null $column filter option
+     * @return array converted DOMNodeList
+     */
+    public function toArray(array $columns = ['source', 'parameters'])
+    {
+        // resolve nodes
+        $list = $this->xpath->query(
+            implode(
+                " | ",
+                array_map(fn($value) => sprintf("bac:item/bac:%s", $value), $columns)
+            )
+        );
+
+        // collect
+        $arr = array();
+
+        foreach ($list as $node) {
+            $arr[$node->nodeName][$node->parentElement->id] = $node->nodeValue;
+        }
+
+        return count($columns) == 1 ? $arr[$columns[0]] : $arr;
+    }
+
+    /**
      *. initialize configuration prerequisites
      * @throws \Webmozart\Assert\InvalidArgumentException
      * @return static
@@ -140,31 +167,17 @@ class Configuration
         return file_exists($this->FILE);
     }
 
-    /**
-     *. Convert DOMNodeList into Array
-     * @param \DOMNodeList $list
-     * @param string|null $column filter option
-     * @return array converted DOMNodeList
-     */
-    public function toArray(array $columns = ['source', 'parameters'])
+    public function remove(string $id)
     {
-        // resolve nodes
-        $list = $this->xpath->query(
-            implode(
-                " | ",
-                array_map(fn($value) => sprintf("bac:item/bac:%s", $value), $columns)
-            )
-        );
+        /**
+         * @var DOMElement
+         */
+        $item = $this->xpath
+            ->query("/bac:backup/bac:item[@id='{$id}']", $this->configuration)
+            ->item(0);
 
-        // collect
-        $arr = array();
+        $item->remove();
 
-        foreach ($list as $node) {
-            $arr[$node->nodeName][$node->parentElement->id] = $node->nodeValue;
-        }
-
-        return count($columns) == 1 ? $arr[$columns[0]] : $arr;
+        return $this;
     }
-
-    public function remove() {}
 }
