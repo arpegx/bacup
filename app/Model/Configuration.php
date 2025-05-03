@@ -93,6 +93,15 @@ class Configuration
     }
 
     /**
+     *. checks if configuration is initialized
+     * @return bool
+     */
+    public function exists()
+    {
+        return file_exists($this->FILE);
+    }
+
+    /**
      *. Convert DOMNodeList into Array
      * @param \DOMNodeList $list
      * @param string|null $column filter option
@@ -131,6 +140,11 @@ class Configuration
         return $this;
     }
 
+    /**
+     *. add item to configuration
+     * @param array $data
+     * @return static
+     */
     public function add(array $data)
     {
         $item = $this->configuration->createElementNS(qualifiedName: "item", namespace: "https://www.arpegx.com");
@@ -148,25 +162,10 @@ class Configuration
     }
 
     /**
-     *. save virtual dom to configuration file
-     * @throws \Webmozart\Assert\InvalidArgumentException
-     * @return void
+     *. remove item from configuration
+     * @param string $id
+     * @return static
      */
-    public function save()
-    {
-        Assert::true($this->configuration->schemaValidate(self::XSD_SCHEMA), "Schemata Validation failed");
-        file_put_contents($this->FILE, $this->configuration->saveXML());
-    }
-
-    /**
-     *. checks if configuration is initialized
-     * @return bool
-     */
-    public function exists()
-    {
-        return file_exists($this->FILE);
-    }
-
     public function remove(string $id)
     {
         /**
@@ -179,5 +178,16 @@ class Configuration
         $item->remove();
 
         return $this;
+    }
+
+    /**
+     *. save virtual dom to configuration file
+     * @throws \Webmozart\Assert\InvalidArgumentException
+     * @return void
+     */
+    public function save()
+    {
+        Assert::true($this->configuration->schemaValidate(self::XSD_SCHEMA), "Schemata Validation failed");
+        file_put_contents($this->FILE, $this->configuration->saveXML());
     }
 }

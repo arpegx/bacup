@@ -46,6 +46,10 @@ class Untrack extends Command
         IO::render("Untrack/result", $input);
     }
 
+    /**
+     *. request manual user input
+     * @return array
+     */
     private static function request()
     {
         $elements = (Configuration::getInstance())->toArray(["source"]);
