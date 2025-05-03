@@ -6,8 +6,6 @@ namespace Arpegx\Bacup\Command;
 
 use Arpegx\Bacup\Routing\Rules;
 use Arpgex\Bacup\Model\Configuration;
-
-use DOMElement;
 use function Laravel\Prompts\form;
 
 class Untrack extends Command
@@ -30,17 +28,14 @@ class Untrack extends Command
     {
         $input =  self::request();
 
-        print_r($input);
+        // validate
+        // remove
+        // render
     }
 
     private static function request()
     {
-        $configuration = Configuration::getInstance();
-
-        $elements = $configuration->toArray(
-            $configuration->xpath->query('bac:item/bac:source'),
-            'source'
-        );
+        $elements = (Configuration::getInstance())->toArray(["source"]);
 
         return form()
             ->search(

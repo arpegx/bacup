@@ -146,30 +146,24 @@ class Configuration
      * @param string|null $column filter option
      * @return array converted DOMNodeList
      */
-    public function toArray(?\DOMNodeList $list = null, ?string $column = null)
+    public function toArray(array $columns = ['source', 'parameters'])
     {
-        $list ??= $this->xpath->query('bac:item/bac:source | bac:item/bac:parameters');
+        // resolve nodes
+        $list = $this->xpath->query(
+            implode(
+                " | ",
+                array_map(fn($value) => sprintf("bac:item/bac:%s", $value), $columns)
+            )
+        );
 
+        // collect
         $arr = array();
 
         foreach ($list as $node) {
-            switch ($node->nodeName) {
-                case "item":
-                    foreach ($node->childNodes as $element) {
-                        $arr[$element->parentElement->id][$element->nodeName] = $element->nodeValue;
-                    }
-                    break;
-                default:
-                    $arr[$node->parentElement->id][$node->nodeName] = $node->nodeValue;
-                    break;
-            }
+            $arr[$node->nodeName][$node->parentElement->id] = $node->nodeValue;
         }
 
-        if ($column !== null) {
-            $arr = array_column($arr, $column);
-        }
-
-        return $arr;
+        return count($columns) == 1 ? $arr[$columns[0]] : $arr;
     }
 
     public function remove() {}
