@@ -53,6 +53,12 @@ class Configuration
     public readonly string $FILE;
 
     /**
+     * item
+     * @var \DOMElement
+     */
+    public readonly DomElement $item;
+
+    /**
      *. ctor
      */
     private function __construct()
@@ -99,6 +105,18 @@ class Configuration
     public function exists()
     {
         return file_exists($this->FILE);
+    }
+
+    public function item(string $id)
+    {
+        /**
+         * @var DOMElement
+         */
+        $this->item = $this->xpath
+            ->query("/bac:backup/bac:item[@id='{$id}']", $this->configuration)
+            ->item(0);
+
+        return $this;
     }
 
     /**
@@ -166,16 +184,13 @@ class Configuration
      * @param string $id
      * @return static
      */
-    public function remove(string $id)
+    public function remove()
     {
         /**
          * @var DOMElement
          */
-        $item = $this->xpath
-            ->query("/bac:backup/bac:item[@id='{$id}']", $this->configuration)
-            ->item(0);
-
-        $item->remove();
+        Assert::notNull($this->item, "No item selected");
+        $this->item->remove();
 
         return $this;
     }

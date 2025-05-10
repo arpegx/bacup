@@ -38,12 +38,11 @@ class Untrack extends Command
         ]);
 
         // remove
-        Configuration::getInstance()
-            ->remove($input["target"])
-            ->save();
+        $item = Configuration::getInstance()->item($input["target"]);
+        $item->remove()->save();
 
         // render
-        IO::render("Untrack/result", $input);
+        IO::render("Untrack/result", ["target" => $item->item->childNodes->item(0)->textContent]);
     }
 
     /**
