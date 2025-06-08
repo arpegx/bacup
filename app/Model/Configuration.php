@@ -125,7 +125,7 @@ class Configuration
      * @param string|null $column filter option
      * @return array converted DOMNodeList
      */
-    public function toArray(array $columns = ['source', 'parameters'])
+    public function toArray(array $columns = ['source'])
     {
         // resolve nodes
         $list = $this->xpath->query(
@@ -170,9 +170,6 @@ class Configuration
 
         $source = $this->configuration->createElementNS(qualifiedName: "source", value: $data["target"], namespace: "https://www.arpegx.com");
         $item->appendChild($source);
-
-        $parameters = $this->configuration->createElementNS(qualifiedName: "parameters", value: "parameters", namespace: "https://www.arpegx.com");
-        $item->appendChild($parameters);
 
         $this->configuration->firstElementChild->insertBefore($item);
 

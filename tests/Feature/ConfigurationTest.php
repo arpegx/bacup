@@ -42,7 +42,7 @@ describe("Configuration", function () {
                 gets: ["configuration"]
             );
 
-            expect(($result["configuration"])->textContent)->toEqual("\n/usr/src/bacup/appparameters");
+            expect(($result["configuration"])->textContent)->toEqual("\n/usr/src/bacup/app");
         });
     });
 
